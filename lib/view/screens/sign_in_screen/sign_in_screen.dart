@@ -7,6 +7,7 @@ import 'package:growa/view/screens/sign_up_screen/sign_up_screen.dart';
 class SignInScreen extends StatelessWidget {
   SignInScreen({super.key});
   final ValueNotifier<bool> obscure = ValueNotifier<bool>(true);
+  final ValueNotifier<bool> isChecked = ValueNotifier<bool>(false);
 
   @override
   Widget build(BuildContext context) {
@@ -79,8 +80,29 @@ class SignInScreen extends StatelessWidget {
 
   Row _rfText() {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Text("Remember me?", style: TextStyle(color: grey, fontSize: 14)),
+        ValueListenableBuilder(
+          valueListenable: isChecked,
+          builder: (context, value1, child) {
+            return SizedBox(
+              width: 18,
+              height: 18,
+              child: Checkbox(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadiusGeometry.circular(5),
+                  side: BorderSide(width: 1),
+                ),
+                activeColor: green,
+                value: value1,
+                onChanged: (bool? value) {
+                  isChecked.value = !value1;
+                },
+              ),
+            );
+          },
+        ),
+        Text(" Remember me?", style: TextStyle(color: grey, fontSize: 14)),
         Spacer(),
         Text("forgot password?", style: TextStyle(color: grey, fontSize: 14)),
       ],
