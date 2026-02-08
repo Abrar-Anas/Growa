@@ -2,9 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:growa/model/colors/colors.dart';
 import 'package:growa/view/screens/sign_in_screen/sign_in_screen.dart';
 
+import 'package:growa/controllers/auth_service.dart';
+import 'package:dio/dio.dart';
+
 class SignUpScreen extends StatelessWidget {
   SignUpScreen({super.key});
+
+  final AuthService authService = AuthService();
   final ValueNotifier<bool> obscure = ValueNotifier<bool>(true);
+
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +45,7 @@ class SignUpScreen extends StatelessWidget {
                     SizedBox(height: 15),
                     _confirmNewPassword(),
                     SizedBox(height: 62),
-                    _signUpButton(),
+                    _signUpButton(context),
                     SizedBox(height: 43),
                   ],
                 ),
@@ -52,6 +63,7 @@ class SignUpScreen extends StatelessWidget {
       valueListenable: obscure,
       builder: (context, value, child) {
         return TextField(
+          controller: _passwordController,
           obscureText: !obscure.value,
           decoration: InputDecoration(
             hint: Text("Enter New Password", style: TextStyle(color: tfcolor)),
@@ -130,10 +142,75 @@ class SignUpScreen extends StatelessWidget {
     );
   }
 
-  ElevatedButton _signUpButton() {
+  ElevatedButton _signUpButton(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(backgroundColor: green),
-      onPressed: () {},
+      onPressed: () async {
+        String name = _nameController.text.trim();
+        String email = _emailController.text.trim();
+        String password = _passwordController.text.trim();
+        String confirmPassword = _confirmPasswordController.text.trim();
+
+        if (name.isEmpty ||
+            email.isEmpty ||
+            password.isEmpty ||
+            confirmPassword.isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Please fill in all fields")),
+          );
+          return;
+        }
+
+        if (password != confirmPassword) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Passwords do not match")),
+          );
+          return;
+        }
+
+        try {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) =>
+                Center(child: CircularProgressIndicator(color: green)),
+          );
+
+          final response = await authService.signUp(
+            name: name,
+            email: email,
+            password: password,
+            passwordConfirmation: confirmPassword,
+          );
+
+          if (!context.mounted) return;
+          Navigator.pop(context);
+
+          if (response != null &&
+              (response.statusCode == 200 || response.statusCode == 201)) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Registration Successful!")),
+            );
+            Navigator.pop(context); // Go back to sign in
+          }
+        } catch (e) {
+          if (!context.mounted) return;
+          if (Navigator.canPop(context)) {
+            Navigator.pop(context);
+          }
+
+          String errorMessage = "Registration Failed";
+          if (e is DioException && e.response?.data != null) {
+            errorMessage = e.response?.data['message'] ?? errorMessage;
+          } else {
+            errorMessage = e.toString();
+          }
+
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(errorMessage)));
+        }
+      },
       child: Text(
         "Sign Up",
         style: TextStyle(
@@ -147,7 +224,8 @@ class SignUpScreen extends StatelessWidget {
 
   TextField _confirmNewPassword() {
     return TextField(
-      obscureText: false,
+      controller: _confirmPasswordController,
+      obscureText: true,
       decoration: InputDecoration(
         hint: Text("Confirm New Password", style: TextStyle(color: tfcolor)),
         prefixIcon: Image.asset(
@@ -171,6 +249,7 @@ class SignUpScreen extends StatelessWidget {
 
   TextField _nameTextField() {
     return TextField(
+      controller: _nameController,
       cursorErrorColor: red,
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.done,
@@ -197,6 +276,7 @@ class SignUpScreen extends StatelessWidget {
 
   TextField _email() {
     return TextField(
+      controller: _emailController,
       cursorErrorColor: red,
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.done,

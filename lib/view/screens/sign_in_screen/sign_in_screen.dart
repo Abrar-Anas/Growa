@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:growa/model/colors/colors.dart';
 import 'package:growa/view/screens/sign_up_screen/sign_up_screen.dart';
 import 'package:growa/controllers/auth_service.dart';
+import 'package:dio/dio.dart';
+import 'package:growa/view/screens/home_screen/home_screen.dart';
 
 // Run this line:
 
@@ -147,12 +149,58 @@ class SignInScreen extends StatelessWidget {
     );
   }
 
-  ElevatedButton _signInButton(context) {
+  ElevatedButton _signInButton(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(backgroundColor: green),
-      onPressed: () {
-        String email = _emailController.text;
-        String password = _passwordController.text;
+      onPressed: () async {
+        String email = _emailController.text.trim();
+        String password = _passwordController.text.trim();
+
+        if (email.isEmpty || password.isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Please fill in all fields")),
+          );
+          return;
+        }
+
+        try {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) =>
+                Center(child: CircularProgressIndicator(color: green)),
+          );
+
+          final response = await authService.signIn(email, password);
+          if (!context.mounted) return;
+          Navigator.pop(context);
+
+          if (response != null &&
+              (response.statusCode == 200 || response.statusCode == 201)) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(const SnackBar(content: Text("Login Successful!")));
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => const HomeScreen()),
+            );
+          }
+        } catch (e) {
+          if (!context.mounted) return;
+          if (Navigator.canPop(context)) {
+            Navigator.pop(context);
+          }
+
+          String errorMessage = "Login Failed";
+          if (e is DioException && e.response?.data != null) {
+            errorMessage = e.response?.data['message'] ?? errorMessage;
+          } else {
+            errorMessage = e.toString();
+          }
+
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(errorMessage)));
+        }
       },
       child: Text(
         "Sign In",

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:growa/controllers/auth_service.dart';
 import 'package:growa/view/screens/splash_screen/splash_screen.dart';
 
 void main() {
