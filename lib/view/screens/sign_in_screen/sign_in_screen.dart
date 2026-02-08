@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:growa/model/colors/colors.dart';
-import 'package:growa/view/screens/intro_screen/intro_screen_one.dart';
 import 'package:growa/view/screens/sign_up_screen/sign_up_screen.dart';
+import 'package:growa/controllers/auth_service.dart';
 
 // Run this line:
 
 class SignInScreen extends StatelessWidget {
   SignInScreen({super.key});
+
+  final AuthService authService = AuthService();
+
   final ValueNotifier<bool> obscure = ValueNotifier<bool>(true);
+
   final ValueNotifier<bool> isChecked = ValueNotifier<bool>(false);
+
+  final TextEditingController _emailController = TextEditingController();
+
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -143,13 +151,8 @@ class SignInScreen extends StatelessWidget {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(backgroundColor: green),
       onPressed: () {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) {
-              return IntroScreenOne();
-            },
-          ),
-        );
+        String email = _emailController.text;
+        String password = _passwordController.text;
       },
       child: Text(
         "Sign In",
@@ -167,6 +170,7 @@ class SignInScreen extends StatelessWidget {
       valueListenable: obscure,
       builder: (context, value, child) {
         return TextField(
+          controller: _passwordController,
           obscureText: !obscure.value,
           decoration: InputDecoration(
             hint: Text("Password", style: TextStyle(color: tfcolor)),
@@ -205,6 +209,7 @@ class SignInScreen extends StatelessWidget {
 
   TextField _emailTF() {
     return TextField(
+      controller: _emailController,
       cursorErrorColor: red,
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.done,
