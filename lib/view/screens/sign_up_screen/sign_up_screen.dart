@@ -49,48 +49,43 @@ class SignUpScreen extends StatelessWidget {
 
   ValueListenableBuilder<bool> _newPassword() {
     return ValueListenableBuilder<bool>(
-                    valueListenable: obscure,
-                    builder: (context, value, child) {
-                      return TextField(
-                        obscureText: !obscure.value,
-                        decoration: InputDecoration(
-                          hint: Text(
-                            "Enter New Password",
-                            style: TextStyle(color: tfcolor),
-                          ),
-                          prefixIcon: Image.asset(
-                            'assets/icons/lock-icon.png',
-                            width: 24,
-                            height: 24,
-                          ),
-                          suffixIcon: GestureDetector(
-                            onTap: () {
-                              obscure.value = !obscure.value;
-                            },
-                            child: obscure.value
-                                ? Image.asset(
-                                    "assets/icons/eye-line.png",
-                                    width: 24,
-                                    height: 24,
-                                  )
-                                : Image.asset(
-                                    "assets/icons/eye-close-line.png",
-                                  ),
-                          ),
-                          filled: true,
-                          fillColor: tint,
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: tint),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: tint),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                      );
-                    },
-                  );
+      valueListenable: obscure,
+      builder: (context, value, child) {
+        return TextField(
+          obscureText: !obscure.value,
+          decoration: InputDecoration(
+            hint: Text("Enter New Password", style: TextStyle(color: tfcolor)),
+            prefixIcon: Image.asset(
+              'assets/icons/lock-icon.png',
+              width: 24,
+              height: 24,
+            ),
+            suffixIcon: GestureDetector(
+              onTap: () {
+                obscure.value = !obscure.value;
+              },
+              child: obscure.value
+                  ? Image.asset(
+                      "assets/icons/eye-line.png",
+                      width: 24,
+                      height: 24,
+                    )
+                  : Image.asset("assets/icons/eye-close-line.png"),
+            ),
+            filled: true,
+            fillColor: tint,
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: tint),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: tint),
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   Stack _alreadySignText(BuildContext context) {

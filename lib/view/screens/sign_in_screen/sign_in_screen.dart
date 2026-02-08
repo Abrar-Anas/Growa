@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:growa/model/colors/colors.dart';
+import 'package:growa/view/screens/intro_screen/intro_screen_one.dart';
 import 'package:growa/view/screens/sign_up_screen/sign_up_screen.dart';
 
 // Run this line:
@@ -18,7 +19,7 @@ class SignInScreen extends StatelessWidget {
           padding: const EdgeInsets.all(33.0),
           child: Column(
             children: [
-              Image.asset("assets/icons/growa-logo.png"),
+              _growaLogo(),
               _signInText(),
               SizedBox(height: 5),
               _subHeading(),
@@ -27,7 +28,7 @@ class SignInScreen extends StatelessWidget {
               SizedBox(height: 20),
               _passwordTF(),
               SizedBox(height: 34),
-              _signUpButton(),
+              _signInButton(context),
               SizedBox(height: 43),
               _rfText(),
               SizedBox(height: 3),
@@ -43,6 +44,13 @@ class SignInScreen extends StatelessWidget {
     );
   }
 
+  Hero _growaLogo() {
+    return Hero(
+      tag: "grow logo",
+      child: Image.asset("assets/icons/growa-logo.png"),
+    );
+  }
+
   Row _createOne(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -50,11 +58,33 @@ class SignInScreen extends StatelessWidget {
         Text("don’t have an account?", style: TextStyle(color: tfcolor)),
         GestureDetector(
           onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) {
-                  return SignUpScreen();
-                },
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                transitionDuration: const Duration(milliseconds: 600),
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    SignUpScreen(),
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                      const begin = Offset(1.0, 0.0); // slide from right
+                      const end = Offset.zero;
+                      const curve = Curves.easeInOut;
+
+                      var tween = Tween(
+                        begin: begin,
+                        end: end,
+                      ).chain(CurveTween(curve: curve));
+
+                      var fadeTween = Tween<double>(begin: 0.0, end: 1.0);
+
+                      return SlideTransition(
+                        position: animation.drive(tween),
+                        child: FadeTransition(
+                          opacity: animation.drive(fadeTween),
+                          child: child,
+                        ),
+                      );
+                    },
               ),
             );
           },
@@ -109,12 +139,20 @@ class SignInScreen extends StatelessWidget {
     );
   }
 
-  ElevatedButton _signUpButton() {
+  ElevatedButton _signInButton(context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(backgroundColor: green),
-      onPressed: () {},
+      onPressed: () {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) {
+              return IntroScreenOne();
+            },
+          ),
+        );
+      },
       child: Text(
-        "Sign Up",
+        "Sign In",
         style: TextStyle(
           color: white,
           fontWeight: FontWeight.w600,
