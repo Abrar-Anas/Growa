@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:growa/model/colors/colors.dart';
 import 'package:growa/view/screens/sign_up_screen/sign_up_screen.dart';
 import 'package:growa/controllers/auth_service.dart';
@@ -29,21 +30,21 @@ class SignInScreen extends StatelessWidget {
             children: [
               _growaLogo(),
               _signInText(),
-              SizedBox(height: 5),
+              5.verticalSpace,
               _subHeading(),
-              SizedBox(height: 10),
+              10.verticalSpace,
               _emailTF(),
-              SizedBox(height: 20),
+              15.verticalSpace,
               _passwordTF(),
-              SizedBox(height: 34),
+              28.verticalSpace,
               _signInButton(context),
-              SizedBox(height: 43),
+              35.verticalSpace,
               _rfText(),
-              SizedBox(height: 3),
+              3.verticalSpace,
               _orText(),
-              SizedBox(height: 3),
+              3.verticalSpace,
               Image.asset("assets/icons/google-icon.png"),
-              SizedBox(height: 243),
+              185.verticalSpace,
               _createOne(context),
             ],
           ),
@@ -55,7 +56,11 @@ class SignInScreen extends StatelessWidget {
   Hero _growaLogo() {
     return Hero(
       tag: "grow logo",
-      child: Image.asset("assets/icons/growa-logo.png"),
+      child: Image.asset(
+        "assets/icons/growa-logo.png",
+        width: 338.r,
+        height: 185.r,
+      ),
     );
   }
 
@@ -63,7 +68,10 @@ class SignInScreen extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text("don’t have an account?", style: TextStyle(color: tfcolor)),
+        Text(
+          "don’t have an account?",
+          style: TextStyle(color: tfcolor, fontSize: 14.r),
+        ),
         GestureDetector(
           onTap: () {
             Navigator.push(
@@ -100,7 +108,7 @@ class SignInScreen extends StatelessWidget {
             " Create one",
             style: TextStyle(
               fontWeight: FontWeight.w400,
-              fontSize: 14,
+              fontSize: 14.r,
               color: green,
             ),
           ),
@@ -112,7 +120,7 @@ class SignInScreen extends StatelessWidget {
   Text _orText() {
     return Text(
       "────────  OR  ────────",
-      style: TextStyle(color: grey, fontSize: 20),
+      style: TextStyle(color: grey, fontSize: 20.r),
     );
   }
 
@@ -124,12 +132,12 @@ class SignInScreen extends StatelessWidget {
           valueListenable: isChecked,
           builder: (context, value1, child) {
             return SizedBox(
-              width: 18,
-              height: 18,
+              width: 18.r,
+              height: 18.r,
               child: Checkbox(
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadiusGeometry.circular(5),
-                  side: BorderSide(width: 1),
+                  borderRadius: BorderRadiusGeometry.circular(5.r),
+                  side: BorderSide(width: 1.r),
                 ),
                 activeColor: green,
                 value: value1,
@@ -140,9 +148,15 @@ class SignInScreen extends StatelessWidget {
             );
           },
         ),
-        Text(" Remember me?", style: TextStyle(color: grey, fontSize: 14)),
+        Text(
+          " Remember me?",
+          style: TextStyle(color: grey, fontSize: 14.r),
+        ),
         Spacer(),
-        Text("forgot password?", style: TextStyle(color: grey, fontSize: 14)),
+        Text(
+          "forgot password?",
+          style: TextStyle(color: grey, fontSize: 14.r),
+        ),
       ],
     );
   }
@@ -159,7 +173,7 @@ class SignInScreen extends StatelessWidget {
         style: TextStyle(
           color: white,
           fontWeight: FontWeight.w600,
-          fontSize: 20,
+          fontSize: 20.r,
         ),
       ),
     );
@@ -176,8 +190,8 @@ class SignInScreen extends StatelessWidget {
             hint: Text("Password", style: TextStyle(color: tfcolor)),
             prefixIcon: Image.asset(
               'assets/icons/lock-icon.png',
-              width: 24,
-              height: 24,
+              width: 24.r,
+              height: 24.r,
             ),
             suffixIcon: GestureDetector(
               onTap: () {
@@ -186,8 +200,8 @@ class SignInScreen extends StatelessWidget {
               child: obscure.value
                   ? Image.asset(
                       "assets/icons/eye-line.png",
-                      width: 24,
-                      height: 24,
+                      width: 24.r,
+                      height: 24.r,
                     )
                   : Image.asset("assets/icons/eye-close-line.png"),
             ),
@@ -195,11 +209,11 @@ class SignInScreen extends StatelessWidget {
             fillColor: tint,
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: tint),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12.r),
             ),
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: tint),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12.r),
             ),
           ),
         );
@@ -220,14 +234,14 @@ class SignInScreen extends StatelessWidget {
         fillColor: tint,
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(color: tint),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12.r),
         ),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: tint),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12.r),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12.r),
           borderSide: BorderSide(color: red),
         ),
       ),
@@ -237,14 +251,18 @@ class SignInScreen extends StatelessWidget {
   Text _subHeading() {
     return Text(
       "Sign In To Your Account Via Email",
-      style: TextStyle(color: grey, fontSize: 15),
+      style: TextStyle(color: grey, fontSize: 15.r),
     );
   }
 
   Text _signInText() {
     return Text(
       "Sign In",
-      style: TextStyle(color: black, fontWeight: FontWeight.bold, fontSize: 25),
+      style: TextStyle(
+        color: black,
+        fontWeight: FontWeight.bold,
+        fontSize: 25.r,
+      ),
     );
   }
 }

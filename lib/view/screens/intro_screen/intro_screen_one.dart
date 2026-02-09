@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:growa/model/colors/colors.dart';
 import 'package:growa/view/screens/sign_in_screen/sign_in_screen.dart';
 
@@ -23,11 +24,11 @@ class IntroScreenOne extends StatelessWidget {
                   style: TextStyle(
                     color: black,
                     fontWeight: FontWeight.bold,
-                    fontSize: 24,
+                    fontSize: 24.r,
                   ),
                 ),
               ),
-              SizedBox(height: 10),
+              10.verticalSpace,
               _introBox(),
             ],
           ),
@@ -77,16 +78,16 @@ class IntroScreenOne extends StatelessWidget {
       alignment: AlignmentGeometry.xy(0, 0.9),
       children: [
         Container(
-          width: 332,
-          height: 512,
+          width: 332.r,
+          height: 512.r,
           decoration: BoxDecoration(
             color: green,
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(10.r),
           ),
         ),
         SizedBox(
-          width: 332,
-          height: 512,
+          width: 332.r,
+          height: 512.r,
           child: PageView(
             controller: _controller,
             onPageChanged: (value) => _currentPage.value = value,
@@ -94,15 +95,15 @@ class IntroScreenOne extends StatelessWidget {
               Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  SizedBox(height: 10),
+                  10.verticalSpace,
                   Image.asset(
                     "assets/image/intro-image-one.png",
-                    width: 291,
-                    height: 291,
+                    width: 291.r,
+                    height: 291.r,
                   ),
-                  SizedBox(height: 10),
+                  10.verticalSpace,
                   Padding(
-                    padding: const EdgeInsetsGeometry.only(left: 35),
+                    padding: const EdgeInsets.only(left: 35).r,
                     child: Align(
                       alignment: AlignmentGeometry.centerLeft,
                       child: Text(
@@ -110,14 +111,14 @@ class IntroScreenOne extends StatelessWidget {
                         style: TextStyle(
                           color: white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 24,
+                          fontSize: 24.r,
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  20.verticalSpace,
 
-                  SizedBox(height: 10),
+                  10.verticalSpace,
                 ],
               ),
               Column(
@@ -125,11 +126,11 @@ class IntroScreenOne extends StatelessWidget {
                 children: [
                   Image.asset(
                     "assets/image/intro-image-two.png",
-                    width: 291,
-                    height: 291,
+                    width: 291.r,
+                    height: 291.r,
                   ),
                   Padding(
-                    padding: const EdgeInsetsGeometry.only(left: 35),
+                    padding: const EdgeInsets.only(left: 35).r,
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Column(
@@ -139,7 +140,7 @@ class IntroScreenOne extends StatelessWidget {
                             style: TextStyle(
                               color: yellow,
                               fontWeight: FontWeight.w700,
-                              fontSize: 24,
+                              fontSize: 24.r,
                             ),
                           ),
                           Text(
@@ -147,14 +148,14 @@ class IntroScreenOne extends StatelessWidget {
                             style: TextStyle(
                               color: white,
                               fontWeight: FontWeight.w600,
-                              fontSize: 20,
+                              fontSize: 20.r,
                             ),
                           ),
                         ],
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  20.verticalSpace,
                 ],
               ),
               Column(
@@ -162,11 +163,11 @@ class IntroScreenOne extends StatelessWidget {
                 children: [
                   Image.asset(
                     "assets/image/intro-image-three.png",
-                    width: 291,
-                    height: 291,
+                    width: 291.r,
+                    height: 291.r,
                   ),
                   Padding(
-                    padding: const EdgeInsetsGeometry.only(left: 35),
+                    padding: const EdgeInsets.only(left: 35).r,
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Column(
@@ -177,7 +178,7 @@ class IntroScreenOne extends StatelessWidget {
                             style: TextStyle(
                               color: yellow,
                               fontWeight: FontWeight.w700,
-                              fontSize: 24,
+                              fontSize: 24.r,
                             ),
                           ),
                           Text(
@@ -185,14 +186,14 @@ class IntroScreenOne extends StatelessWidget {
                             style: TextStyle(
                               color: white,
                               fontWeight: FontWeight.w600,
-                              fontSize: 20,
+                              fontSize: 20.r,
                             ),
                           ),
                         ],
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  20.verticalSpace,
                 ],
               ),
             ],
@@ -208,9 +209,9 @@ class IntroScreenOne extends StatelessWidget {
               children: List.generate(3, (index) {
                 return AnimatedContainer(
                   duration: Duration(microseconds: 300),
-                  margin: EdgeInsets.symmetric(horizontal: 10),
-                  width: 19,
-                  height: 19,
+                  margin: EdgeInsets.symmetric(horizontal: 10).r,
+                  width: 19.r,
+                  height: 19.r,
                   decoration: BoxDecoration(
                     color: activePage == index ? tfcolor : white,
                     shape: BoxShape.circle,

@@ -19,6 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
       ..initialize().then((_) {
         setState(() {});
         _controller.play();
+        _controller.setVolume(0.0);
       });
 
     _controller.addListener(() {

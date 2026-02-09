@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:growa/model/colors/colors.dart';
 import 'package:growa/view/screens/sign_in_screen/sign_in_screen.dart';
 
@@ -17,25 +18,25 @@ class SignUpScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
-                padding: EdgeInsetsGeometry.only(top: 50, right: 33, left: 33),
+                padding: EdgeInsets.only(top: 50, right: 33, left: 33).r,
                 child: Column(
                   children: [
                     Image.asset(
                       "assets/icons/growa_icon_2.png",
-                      width: 135,
-                      height: 151,
+                      width: 135.r,
+                      height: 151.r,
                     ),
-                    SizedBox(height: 20),
+                    13.verticalSpace,
                     _nameTextField(),
-                    SizedBox(height: 15),
+                    15.verticalSpace,
                     _email(),
-                    SizedBox(height: 95),
+                    60.verticalSpace,
                     _newPassword(),
-                    SizedBox(height: 15),
+                    15.verticalSpace,
                     _confirmNewPassword(),
-                    SizedBox(height: 62),
+                    55.verticalSpace,
                     _signUpButton(),
-                    SizedBox(height: 43),
+                    35.verticalSpace,
                   ],
                 ),
               ),
@@ -57,8 +58,8 @@ class SignUpScreen extends StatelessWidget {
             hint: Text("Enter New Password", style: TextStyle(color: tfcolor)),
             prefixIcon: Image.asset(
               'assets/icons/lock-icon.png',
-              width: 24,
-              height: 24,
+              width: 24.r,
+              height: 24.r,
             ),
             suffixIcon: GestureDetector(
               onTap: () {
@@ -67,8 +68,8 @@ class SignUpScreen extends StatelessWidget {
               child: obscure.value
                   ? Image.asset(
                       "assets/icons/eye-line.png",
-                      width: 24,
-                      height: 24,
+                      width: 24.r,
+                      height: 24.r,
                     )
                   : Image.asset("assets/icons/eye-close-line.png"),
             ),
@@ -76,11 +77,11 @@ class SignUpScreen extends StatelessWidget {
             fillColor: tint,
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: tint),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12.r),
             ),
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: tint),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12.r),
             ),
           ),
         );
@@ -93,16 +94,16 @@ class SignUpScreen extends StatelessWidget {
       children: [
         Image.asset(
           "assets/image/leaf_sign_up_page.png",
-          width: double.infinity,
+          width: 406.9933111179363.r,
           fit: BoxFit.cover,
         ),
         Padding(
-          padding: const EdgeInsetsGeometry.only(left: 33),
+          padding: const EdgeInsets.only(left: 33).r,
           child: Row(
             children: [
               Text(
                 "Already have an account?",
-                style: TextStyle(color: grey, fontSize: 14),
+                style: TextStyle(color: grey, fontSize: 14.r),
               ),
               GestureDetector(
                 onTap: () {
@@ -118,7 +119,7 @@ class SignUpScreen extends StatelessWidget {
                   " Sign in",
                   style: TextStyle(
                     fontWeight: FontWeight.w400,
-                    fontSize: 14,
+                    fontSize: 14.r,
                     color: green,
                   ),
                 ),
@@ -139,7 +140,7 @@ class SignUpScreen extends StatelessWidget {
         style: TextStyle(
           color: white,
           fontWeight: FontWeight.w600,
-          fontSize: 20,
+          fontSize: 20.r,
         ),
       ),
     );
@@ -152,18 +153,18 @@ class SignUpScreen extends StatelessWidget {
         hint: Text("Confirm New Password", style: TextStyle(color: tfcolor)),
         prefixIcon: Image.asset(
           'assets/icons/lock-icon.png',
-          width: 24,
-          height: 24,
+          width: 24.r,
+          height: 24.r,
         ),
         filled: true,
         fillColor: tint,
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(color: tint),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12.r),
         ),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: tint),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12.r),
         ),
       ),
     );
@@ -175,20 +176,20 @@ class SignUpScreen extends StatelessWidget {
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.done,
       decoration: InputDecoration(
-        prefixIcon: SizedBox(width: 22),
+        prefixIcon: SizedBox(width: 22.r),
         hint: Text("Enter Your Name", style: TextStyle(color: tfcolor)),
         filled: true,
         fillColor: tint,
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(color: tint),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12.r),
         ),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: tint),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12.r),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12.r),
           borderSide: BorderSide(color: red),
         ),
       ),
@@ -207,14 +208,14 @@ class SignUpScreen extends StatelessWidget {
         fillColor: tint,
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(color: tint),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12.r),
         ),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: tint),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12.r),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12.r),
           borderSide: BorderSide(color: red),
         ),
       ),
