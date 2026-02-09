@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:growa/controllers/auth_service.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:growa/model/colors/colors.dart';
+import 'package:growa/view/screens/home_screen/home_screen.dart';
 import 'package:growa/view/screens/sign_in_screen/sign_in_screen.dart';
 
 class SignUpScreen extends StatelessWidget {
   SignUpScreen({super.key});
+
+  final ApiService _apiService = ApiService();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   final ValueNotifier<bool> obscure = ValueNotifier<bool>(true);
 
   @override
@@ -35,7 +44,7 @@ class SignUpScreen extends StatelessWidget {
                     15.verticalSpace,
                     _confirmNewPassword(),
                     55.verticalSpace,
-                    _signUpButton(),
+                    _signUpButton(context),
                     35.verticalSpace,
                   ],
                 ),
@@ -53,6 +62,7 @@ class SignUpScreen extends StatelessWidget {
       valueListenable: obscure,
       builder: (context, value, child) {
         return TextField(
+          controller: _passwordController,
           obscureText: !obscure.value,
           decoration: InputDecoration(
             hint: Text("Enter New Password", style: TextStyle(color: tfcolor)),
@@ -131,10 +141,51 @@ class SignUpScreen extends StatelessWidget {
     );
   }
 
-  ElevatedButton _signUpButton() {
+  ElevatedButton _signUpButton(context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(backgroundColor: green),
-      onPressed: () {},
+      onPressed: () async {
+        String name = _nameController.text.trim();
+        String email = _emailController.text.trim();
+        String password = _passwordController.text;
+        String confirmPassword = _confirmPasswordController.text;
+
+        if (name.isEmpty || email.isEmpty || password.isEmpty) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text("Fill Every Field")));
+          return;
+        }
+        if (confirmPassword != password) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text("Passwords do not match")));
+        }
+
+        final responese = await _apiService.signUp(
+          name,
+          email,
+          password,
+          confirmPassword,
+        );
+        if (responese?.statusCode == 201 || responese?.statusCode == 200) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) {
+                return HomeScreen();
+              },
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                "${responese?.data['message'] ?? 'Registration failed'}",
+              ),
+            ),
+          );
+        }
+      },
       child: Text(
         "Sign Up",
         style: TextStyle(
@@ -148,6 +199,7 @@ class SignUpScreen extends StatelessWidget {
 
   TextField _confirmNewPassword() {
     return TextField(
+      controller: _confirmPasswordController,
       obscureText: false,
       decoration: InputDecoration(
         hint: Text("Confirm New Password", style: TextStyle(color: tfcolor)),
@@ -172,6 +224,7 @@ class SignUpScreen extends StatelessWidget {
 
   TextField _nameTextField() {
     return TextField(
+      controller: _nameController,
       cursorErrorColor: red,
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.done,
@@ -198,6 +251,7 @@ class SignUpScreen extends StatelessWidget {
 
   TextField _email() {
     return TextField(
+      controller: _emailController,
       cursorErrorColor: red,
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.done,

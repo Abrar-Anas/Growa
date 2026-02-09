@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:growa/model/colors/colors.dart';
+import 'package:growa/view/screens/home_screen/home_screen.dart';
 import 'package:growa/view/screens/sign_up_screen/sign_up_screen.dart';
+import 'package:http/http.dart';
 import 'package:growa/controllers/auth_service.dart';
 
 // Run this line:
@@ -9,7 +11,7 @@ import 'package:growa/controllers/auth_service.dart';
 class SignInScreen extends StatelessWidget {
   SignInScreen({super.key});
 
-  final AuthService authService = AuthService();
+  final ApiService _apiService = ApiService();
 
   final ValueNotifier<bool> obscure = ValueNotifier<bool>(true);
 
@@ -37,7 +39,40 @@ class SignInScreen extends StatelessWidget {
               15.verticalSpace,
               _passwordTF(),
               28.verticalSpace,
-              _signInButton(context),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(backgroundColor: green),
+                onPressed: () async {
+                  final response = await _apiService.login(
+                    _emailController.text.trim(),
+                    _passwordController.text,
+                  );
+                  if (response?.statusCode == 200) {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return HomeScreen();
+                        },
+                      ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          "Login Failed ${response?.data['message'] ?? 'Check credinals'}",
+                        ),
+                      ),
+                    );
+                  }
+                },
+                child: Text(
+                  "Sign In",
+                  style: TextStyle(
+                    color: white,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20.r,
+                  ),
+                ),
+              ),
               35.verticalSpace,
               _rfText(),
               3.verticalSpace,
@@ -158,24 +193,6 @@ class SignInScreen extends StatelessWidget {
           style: TextStyle(color: grey, fontSize: 14.r),
         ),
       ],
-    );
-  }
-
-  ElevatedButton _signInButton(context) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(backgroundColor: green),
-      onPressed: () {
-        String email = _emailController.text;
-        String password = _passwordController.text;
-      },
-      child: Text(
-        "Sign In",
-        style: TextStyle(
-          color: white,
-          fontWeight: FontWeight.w600,
-          fontSize: 20.r,
-        ),
-      ),
     );
   }
 
