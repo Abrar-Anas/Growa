@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:growa/view/screens/splash_screen/splash_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
     designSize: const Size(375, 812),
     minTextAdapt: true,
     splitScreenMode: true,
-    builder: (context, child) =>  MaterialApp(
+    builder: (context, child) => MaterialApp(
       theme: ThemeData(primaryColor: Colors.white),
       home: child,
       debugShowCheckedModeBanner: false,

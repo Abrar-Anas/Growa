@@ -5,6 +5,7 @@ import 'package:growa/view/screens/home_screen/home_screen.dart';
 import 'package:growa/view/screens/sign_up_screen/sign_up_screen.dart';
 import 'package:http/http.dart';
 import 'package:growa/controllers/auth_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // Run this line:
 
@@ -39,40 +40,7 @@ class SignInScreen extends StatelessWidget {
               15.verticalSpace,
               _passwordTF(),
               28.verticalSpace,
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: green),
-                onPressed: () async {
-                  final response = await _apiService.login(
-                    _emailController.text.trim(),
-                    _passwordController.text,
-                  );
-                  if (response?.statusCode == 200) {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return HomeScreen();
-                        },
-                      ),
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          "Login Failed ${response?.data['message'] ?? 'Check credinals'}",
-                        ),
-                      ),
-                    );
-                  }
-                },
-                child: Text(
-                  "Sign In",
-                  style: TextStyle(
-                    color: white,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 20.r,
-                  ),
-                ),
-              ),
+              _signInButton(context),
               35.verticalSpace,
               _rfText(),
               3.verticalSpace,
@@ -83,6 +51,46 @@ class SignInScreen extends StatelessWidget {
               _createOne(context),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  ElevatedButton _signInButton(BuildContext context) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(backgroundColor: green),
+      onPressed: () async {
+        final response = await _apiService.login(
+          _emailController.text.trim(),
+          _passwordController.text,
+        );
+        if (response?.statusCode == 200) {
+          String token = response?.data['token'];
+          final SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString('user_token', token);
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) {
+                return HomeScreen();
+              },
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                "Login Failed ${response?.data['message'] ?? 'Check credinals'}",
+              ),
+            ),
+          );
+        }
+      },
+      child: Text(
+        "Sign In",
+        style: TextStyle(
+          color: white,
+          fontWeight: FontWeight.w600,
+          fontSize: 20.r,
         ),
       ),
     );

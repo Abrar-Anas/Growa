@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:growa/model/colors/colors.dart';
+import 'package:growa/view/screens/home_screen/home_screen.dart';
 import 'package:growa/view/screens/intro_screen/intro_screen_one.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -24,20 +26,33 @@ class _SplashScreenState extends State<SplashScreen> {
 
     _controller.addListener(() {
       if (_controller.value.position == _controller.value.duration) {
-        _navigateToHome();
+        _checkStatus();
       }
     });
     super.initState();
   }
 
-  void _navigateToHome() {
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) {
-          return IntroScreenOne();
-        },
-      ),
-    );
+  void _checkStatus() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString("user_token");
+
+    if (token != null && token.isNotEmpty) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) {
+            return HomeScreen();
+          },
+        ),
+      );
+    } else {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) {
+            return IntroScreenOne();
+          },
+        ),
+      );
+    }
   }
 
   @override

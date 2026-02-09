@@ -141,7 +141,7 @@ class SignUpScreen extends StatelessWidget {
     );
   }
 
-  ElevatedButton _signUpButton(context) {
+  ElevatedButton _signUpButton(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(backgroundColor: green),
       onPressed: () async {
