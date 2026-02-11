@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:growa/model/colors/colors.dart';
 import 'package:growa/view/screens/home_screen/home_screen.dart';
 import 'package:growa/view/screens/sign_up_screen/sign_up_screen.dart';
-import 'package:http/http.dart';
+
 import 'package:growa/controllers/auth_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -28,7 +28,7 @@ class SignInScreen extends StatelessWidget {
       backgroundColor: background,
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(33.0),
+          padding: const EdgeInsets.all(33.0).r,
           child: Column(
             children: [
               _growaLogo(),

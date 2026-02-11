@@ -9,3 +9,5 @@ Color background = Color(0xffFFFFFF);
 Color green = Color(0xff2E7D32);
 Color white = Colors.white;
 Color yellow = Color(0xffFBC02D);
+Color lightgreen = Color.fromARGB(255, 207, 236, 126);
+Color accentgreen = const Color.fromARGB(255, 173, 218, 50);
