@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:growa/model/colors/colors.dart';
-import 'package:growa/view/screens/home_screen/home_screen.dart';
+import 'package:growa/view/screens/dash_board/dash_board.dart';
 import 'package:growa/view/screens/sign_up_screen/sign_up_screen.dart';
 
 import 'package:growa/controllers/auth_service.dart';
@@ -71,7 +71,7 @@ class SignInScreen extends StatelessWidget {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
               builder: (context) {
-                return HomeScreen();
+                return DashBoard();
               },
             ),
           );

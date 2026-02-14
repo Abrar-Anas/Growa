@@ -35,8 +35,9 @@ dependencies:
   flutter_screenutil: ^5.9.3
   shared_preferences: ^2.5.4
   gauge_indicator: ^0.4.3
-  flutter_floating_bottom_bar: ^1.3.0
   flutter_bloc: ^9.1.1
+  fl_chart: ^1.1.1
+  animations: ^2.0.11
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -82,6 +83,7 @@ flutter:
     - assets/image/plant.png
     - assets/image/graph.png
     - assets/icons/leaf-icon.png
+    - assets/image/background_plant.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

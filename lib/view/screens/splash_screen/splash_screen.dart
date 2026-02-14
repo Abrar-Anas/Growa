@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:growa/model/colors/colors.dart';
-import 'package:growa/view/screens/home_screen/home_screen.dart';
+import 'package:growa/view/screens/dash_board/dash_board.dart';
 import 'package:growa/view/screens/intro_screen/intro_screen_one.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
@@ -37,10 +37,10 @@ class _SplashScreenState extends State<SplashScreen> {
     final String? token = prefs.getString("user_token");
 
     if (token != null && token.isNotEmpty) {
-      Navigator.of(context).pushReplacement(
+      Navigator.of(context).pushReplacement (
         MaterialPageRoute(
           builder: (context) {
-            return HomeScreen();
+            return DashBoard();
           },
         ),
       );
