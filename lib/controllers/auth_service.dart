@@ -34,4 +34,34 @@ class ApiService {
       return e.response;
     }
   }
+
+  Future<User> fetchUserData() async {
+    try {
+      // Replace with your actual API endpoint
+      final response = await _dio.get('https://growa.nexariccreations.store/api/');
+      
+      if (response.statusCode == 200) {
+        return User.fromJson(response.data);
+      } else {
+        throw Exception('Failed to load user');
+      }
+    } catch (e) {
+      throw Exception('Error fetching data: $e');
+    }
+  }
+}
+
+class User {
+  final String name;
+  final String email;
+
+  User({required this.name, required this.email});
+
+  // A factory method to convert JSON into a User object
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      name: json['name'],
+      email: json['email'],
+    );
+  }
 }

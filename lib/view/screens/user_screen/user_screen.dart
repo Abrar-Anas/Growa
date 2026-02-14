@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:growa/controllers/auth_service.dart';
 import 'package:growa/model/colors/colors.dart';
 
 class UserScreen extends StatelessWidget {
   UserScreen({super.key});
+
+  final ApiService apiService = ApiService();
 
   final ValueNotifier<bool> reminderSwitch = ValueNotifier(false);
 
@@ -11,22 +15,56 @@ class UserScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: tint,
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0).r,
         child: Column(
           children: [
             // 1. Identity Section
-            const CircleAvatar(
+            CircleAvatar(
               backgroundColor: Colors.white,
               radius: 50,
-              child: Icon(Icons.person, size: 70, color: Colors.green),
+              child: Icon(Icons.person, size: 70.sp, color: Colors.green),
             ),
-            const SizedBox(height: 12),
-            const Text(
-              "User Name",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            12.verticalSpace,
+            FutureBuilder<User>(
+              future: apiService.fetchUserData(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: Text("User"));
+                } else if (snapshot.hasError) {
+                  return Center(child: Text("Error"));
+                } else if (snapshot.hasData) {
+                  return Text(
+                    snapshot.data!.name,
+                    style: TextStyle(
+                      fontSize: 24.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  );
+                }
+                return Center(child: Text("No data found"));
+              },
             ),
-            const Text("abrar@gmail.com"),
-            const SizedBox(height: 20),
+
+            FutureBuilder<User>(
+              future: apiService.fetchUserData(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: Text("email"));
+                } else if (snapshot.hasError) {
+                  return Center(child: Text("Error"));
+                } else if (snapshot.hasData) {
+                  return Text(
+                    snapshot.data!.email,
+                    style: TextStyle(
+                      fontSize: 24.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  );
+                }
+                return Center(child: Text("No data found"));
+              },
+            ),
+            20.verticalSpace,
 
             // 2. Quick Stats Row
             Row(
@@ -37,12 +75,12 @@ class UserScreen extends StatelessWidget {
                 _buildStatColumn("5", "Badges"),
               ],
             ),
-            const Divider(height: 40),
+            Divider(height: 40.h),
 
             // 3. Garden Overview Section
             _buildSectionHeader("My Garden Zones"),
             SizedBox(
-              height: 100,
+              height: 100.h,
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: [
@@ -52,7 +90,7 @@ class UserScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 20),
+            20.verticalSpace,
 
             // 4. Preferences & Settings
             _buildSectionHeader("Preferences"),
@@ -83,6 +121,7 @@ class UserScreen extends StatelessWidget {
               trailing: const Icon(Icons.chevron_right),
               onTap: () {},
             ),
+            100.verticalSpace,
           ],
         ),
       ),
@@ -95,8 +134,8 @@ class UserScreen extends StatelessWidget {
       children: [
         Text(
           value,
-          style: const TextStyle(
-            fontSize: 20,
+          style: TextStyle(
+            fontSize: 20.sp,
             fontWeight: FontWeight.bold,
             color: Colors.green,
           ),
@@ -110,14 +149,14 @@ class UserScreen extends StatelessWidget {
   Widget _buildZoneCard(IconData icon, String label) {
     return Card(
       child: Container(
-        width: 110,
-        padding: const EdgeInsets.all(8),
+        width: 110.w,
+        padding: const EdgeInsets.all(8).r,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, color: Colors.green),
-            const SizedBox(height: 5),
-            Text(label, style: const TextStyle(fontSize: 12)),
+            5.verticalSpace,
+            Text(label, style: TextStyle(fontSize: 12.sp)),
           ],
         ),
       ),
@@ -129,10 +168,10 @@ class UserScreen extends StatelessWidget {
     return Align(
       alignment: Alignment.centerLeft,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        padding: const EdgeInsets.symmetric(vertical: 8.0).w,
         child: Text(
           title,
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
         ),
       ),
     );

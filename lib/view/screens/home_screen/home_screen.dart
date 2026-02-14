@@ -20,10 +20,11 @@ class HomeScreen extends StatelessWidget {
               child: Column(
                 children: [
                   _glassBoxs(),
+                  20.verticalSpace,
                   ExpandableCard(),
                   20.verticalSpace,
                   _plantDetails(),
-                  80.verticalSpace,
+                  100.verticalSpace,
                 ],
               ),
             ),
@@ -43,7 +44,6 @@ SizedBox _glassBoxs() {
         Positioned(
           top: 50.h,
           width: 320.w,
-
           child: Image.asset("assets/image/plant.png"),
         ),
         glass_soil_moisture(),

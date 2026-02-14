@@ -19,11 +19,7 @@ class DashBoard extends StatelessWidget {
 
   final List<String> labelData = ["STATS", "HOME", "USER"];
 
-  final List<Widget> screens = [
-    StatsScreenTwo(),
-    HomeScreen(),
-    UserScreen(), // Replace with UserScreen()
-  ];
+  final List<Widget> screens = [StatsScreenTwo(), HomeScreen(), UserScreen()];
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +33,6 @@ class DashBoard extends StatelessWidget {
         controller: pageController,
         onPageChanged: (index) {
           activeIndex.value = index;
-          // Note: The bar position logic is handled in the LayoutBuilder below
         },
         children: screens,
       ),
@@ -52,34 +47,25 @@ class DashBoard extends StatelessWidget {
           double barWidth = constraints.maxWidth;
           double itemWidth = barWidth / icons.length;
 
-          // Set initial position
           WidgetsBinding.instance.addPostFrameCallback((_) {
             leftPosition.value = activeIndex.value * itemWidth;
           });
 
           return GestureDetector(
-            // --- LIQUID SWIPE ---
             onHorizontalDragUpdate: (details) {
-              // The glass moves freely with the finger
               double newPos = (leftPosition.value + details.delta.dx).clamp(
                 0.0,
                 barWidth - itemWidth,
               );
               leftPosition.value = newPos;
-
-              // Update active index (for icon color/zoom) based on current position
               activeIndex.value = (newPos / itemWidth).round();
             },
             onHorizontalDragEnd: (details) {
-              // --- SNAP & SWITCH LOGIC ---
-              // 1. Determine final resting index
               int targetIndex = (leftPosition.value / itemWidth).round();
 
-              // 2. Animate the glass oval to the exact icon center
               leftPosition.value = targetIndex * itemWidth;
               activeIndex.value = targetIndex;
 
-              // 3. ONLY NOW change the page
               pageController.animateToPage(
                 targetIndex,
                 duration: const Duration(milliseconds: 400),
@@ -87,10 +73,10 @@ class DashBoard extends StatelessWidget {
               );
             },
             child: Container(
-              height: 75,
+              height: 75.h,
               decoration: BoxDecoration(
                 color: Colors.white.withValues(alpha: 0.25),
-                borderRadius: BorderRadius.circular(40),
+                borderRadius: BorderRadius.circular(40).r,
                 border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
                 boxShadow: [
                   BoxShadow(
@@ -102,31 +88,26 @@ class DashBoard extends StatelessWidget {
               ),
               child: Stack(
                 children: [
-                  // --- ZOOMING GLASS OVAL ---
                   ValueListenableBuilder<double>(
                     valueListenable: leftPosition,
                     builder: (context, pos, _) {
                       return AnimatedPositioned(
                         duration: const Duration(milliseconds: 300),
-                        curve: Curves
-                            .easeOutBack, // Back curve adds a slight "overshoot" zoom
+                        curve: Curves.easeOutBack,
                         left: pos + (itemWidth * 0.1),
-                        top: 12,
+                        top: 12.h,
                         child: ValueListenableBuilder<int>(
                           valueListenable: activeIndex,
                           builder: (context, idx, _) {
-                            // TweenAnimationBuilder handles the scale "zoom"
                             return TweenAnimationBuilder<double>(
                               tween: Tween<double>(begin: 0.8, end: 1.0),
                               duration: const Duration(milliseconds: 200),
                               curve: Curves.easeInOut,
-                              key: ValueKey(
-                                idx,
-                              ), // Re-triggers zoom on index change
+                              key: ValueKey(idx),
                               builder: (context, scale, child) {
                                 return Transform.scale(
                                   scale: scale,
-                                  child: GlassOval(width: itemWidth * 0.8),
+                                  child: GlassOval(width: itemWidth * 0.75),
                                 );
                               },
                             );
@@ -136,7 +117,6 @@ class DashBoard extends StatelessWidget {
                     },
                   ),
 
-                  // --- ICONS ---
                   Row(
                     children: List.generate(icons.length, (i) {
                       return Expanded(
@@ -156,9 +136,7 @@ class DashBoard extends StatelessWidget {
                             builder: (context, idx, _) {
                               return AnimatedScale(
                                 duration: const Duration(milliseconds: 200),
-                                scale: idx == i
-                                    ? 1.2
-                                    : 1.0, // Subtle icon zoom too
+                                scale: idx == i ? 1.2 : 1.0,
                                 child: Column(
                                   children: [
                                     Spacer(),

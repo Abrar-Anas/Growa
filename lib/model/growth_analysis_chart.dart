@@ -1,8 +1,9 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:ui';
 
-
+import 'package:growa/model/colors/colors.dart';
 
 class PlantGrowthChart extends StatelessWidget {
   const PlantGrowthChart({super.key});
@@ -18,7 +19,7 @@ class PlantGrowthChart extends StatelessWidget {
         filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
         child: Container(
           width: double.infinity,
-          height: 350,
+          height: 300.h,
           padding: const EdgeInsets.only(
             top: 24,
             bottom: 12,
@@ -26,12 +27,11 @@ class PlantGrowthChart extends StatelessWidget {
             left: 10,
           ),
           decoration: BoxDecoration(
-            
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(20).r,
             // Glass effect gradient
             gradient: LinearGradient(
               colors: [
-                Colors.white.withValues(alpha: 0.2),
+                Colors.white.withValues(alpha: 0.1),
                 Colors.white.withValues(alpha: 0.05),
               ],
               begin: Alignment.topLeft,
@@ -49,7 +49,7 @@ class PlantGrowthChart extends StatelessWidget {
                 drawVerticalLine: false,
                 getDrawingHorizontalLine: (value) => FlLine(
                   color: Colors.white.withValues(alpha: 0.1),
-                  strokeWidth: 1,
+                  strokeWidth: 1.r,
                 ),
               ),
               titlesData: _buildTitles(),
@@ -66,11 +66,11 @@ class PlantGrowthChart extends StatelessWidget {
                   ],
                   isCurved: true,
                   curveSmoothness: 0.35,
-                  barWidth: 5,
+                  barWidth: 5.w,
                   // The line is now the primary green color
-                  color: accentGreen,
+                  color: white.withValues(alpha: 0.2),
                   dotData: FlDotData(
-                    show: true,
+                    show: false,
                     getDotPainter: (spot, percent, barData, index) =>
                         FlDotCirclePainter(
                           radius: 4,
@@ -83,8 +83,8 @@ class PlantGrowthChart extends StatelessWidget {
                     show: true,
                     gradient: LinearGradient(
                       colors: [
-                        accentGreen.withValues(alpha: 0.3),
-                        accentGreen.withValues(alpha: 0.0),
+                        white.withValues(alpha: 0.7),
+                        white.withValues(alpha: 0.0),
                       ],
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
@@ -104,7 +104,7 @@ class PlantGrowthChart extends StatelessWidget {
       leftTitles: AxisTitles(
         sideTitles: SideTitles(
           showTitles: true,
-          reservedSize: 40,
+          reservedSize: 40.sp,
           getTitlesWidget: (value, meta) => Text(
             '${value.toInt()}cm',
             style: const TextStyle(

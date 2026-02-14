@@ -40,16 +40,16 @@ class StatsScreenTwo extends StatelessWidget {
           SingleChildScrollView(
             child: SafeArea(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                padding: const EdgeInsets.symmetric(horizontal: 20.0).w,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 30),
+                    30.verticalSpace,
 
-                    const Text(
+                    Text(
                       "Real-time Data",
                       style: TextStyle(
-                        fontSize: 34,
+                        fontSize: 34.sp,
                         fontWeight: FontWeight.w900,
                         color: Colors.white,
                         letterSpacing: 1.2,
@@ -63,13 +63,14 @@ class StatsScreenTwo extends StatelessWidget {
                         letterSpacing: 2,
                       ),
                     ),
-                    const SizedBox(height: 30),
+                    30.verticalSpace,
 
                     // The Grid of Glass Cards
                     SizedBox(
-                      height: 450,
+                      height: 450.h,
                       width: double.infinity,
                       child: GridView.count(
+                        physics: NeverScrollableScrollPhysics(),
                         crossAxisCount: 2,
                         mainAxisSpacing: 20,
                         crossAxisSpacing: 20,
@@ -106,7 +107,8 @@ class StatsScreenTwo extends StatelessWidget {
                         ],
                       ),
                     ),
-                    SizedBox(height: 30),
+                    30.verticalSpace,
+
                     ClipRRect(
                       borderRadius: BorderRadius.circular(20).r,
                       child: Container(
@@ -186,6 +188,7 @@ class StatsScreenTwo extends StatelessWidget {
                         ),
                       ),
                     ),
+                    30.verticalSpace,
                   ],
                 ),
               ),
@@ -221,7 +224,7 @@ class GlassConditionCard extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.3),
-            blurRadius: 25,
+            blurRadius: 25.r,
             spreadRadius: -5,
             offset: const Offset(0, 10),
           ),
@@ -238,11 +241,11 @@ class GlassConditionCard extends StatelessWidget {
                 BoxShadow(
                   color: Colors.black26,
                   offset: Offset(0, 4),
-                  blurRadius: 8,
+                  blurRadius: 8.r,
                 ),
               ],
               color: Colors.white.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(28),
+              borderRadius: BorderRadius.circular(28).r,
               border: Border.all(
                 color: Colors.white.withValues(alpha: 0.25),
                 width: 1.5,
@@ -254,7 +257,7 @@ class GlassConditionCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(icon, color: Colors.white70, size: 16),
-                    const SizedBox(width: 8),
+                    8.verticalSpace,
                     Text(
                       label,
                       style: const TextStyle(
@@ -268,7 +271,7 @@ class GlassConditionCard extends StatelessWidget {
                 const Spacer(),
                 // Gauge Widget
                 SizedBox(
-                  height: 90,
+                  height: 90.h,
                   child: AnimatedRadialGauge(
                     duration: const Duration(seconds: 1),
                     value: value,
@@ -310,9 +313,9 @@ class GlassConditionCard extends StatelessWidget {
                 const Spacer(),
                 Text(
                   "${value.toInt()} $unit",
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
-                    fontSize: 20,
+                    fontSize: 20.sp,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
