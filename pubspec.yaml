@@ -47,7 +47,7 @@ dependencies:
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/icons/growa_icon_2.png"
+  image_path: "assets/icons/app_icon.png"
   # Optional: for Android 8.0+ adaptive icons
   adaptive_icon_background: "#FFFFFF"
 
@@ -92,6 +92,7 @@ flutter:
     - assets/image/graph.png
     - assets/icons/leaf-icon.png
     - assets/image/background_plant.png
+    - assets/icons/app_icon.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
