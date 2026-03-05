@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
       home: child,
       debugShowCheckedModeBanner: false,
     ),
-    child: const SplashScreen(),
+    child: const SplashScreen
+    (),
   );
 }

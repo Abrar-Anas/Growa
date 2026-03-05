@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:growa/model/colors/colors.dart';
 import 'package:growa/view/screens/dash_board/dash_board.dart';
-import 'package:growa/view/screens/sign_up_screen/sign_up_screen.dart';
-
 import 'package:growa/controllers/auth_service.dart';
+import 'package:growa/view/screens/sign_up_screen/register_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Run this line:
@@ -122,7 +121,7 @@ class SignInScreen extends StatelessWidget {
               PageRouteBuilder(
                 transitionDuration: const Duration(milliseconds: 600),
                 pageBuilder: (context, animation, secondaryAnimation) =>
-                    SignUpScreen(),
+                    GrowaRegisterPage(),
                 transitionsBuilder:
                     (context, animation, secondaryAnimation, child) {
                       const begin = Offset(1.0, 0.0); // slide from right

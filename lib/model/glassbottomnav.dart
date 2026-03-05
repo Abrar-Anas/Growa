@@ -14,7 +14,7 @@ class GlassOval extends StatelessWidget {
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Container(
           height: 50.h,
-          width: width.w,
+          width: width,
           decoration: BoxDecoration(
             color: Colors.white.withValues(alpha: 0.15),
             borderRadius: BorderRadius.circular(25).r,
