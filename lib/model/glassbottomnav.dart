@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class GlassOval extends StatelessWidget {
   final double width;
-  const GlassOval({required this.width});
+  const GlassOval({super.key, required this.width});
 
   @override
   Widget build(BuildContext context) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:growa/controllers/auth_service.dart';
 import 'package:growa/model/colors/colors.dart';
+import 'package:growa/view/screens/sign_in_screen/sign_in_screen.dart';
 
 class UserScreen extends StatelessWidget {
   UserScreen({super.key});
@@ -25,45 +26,45 @@ class UserScreen extends StatelessWidget {
               child: Icon(Icons.person, size: 70.sp, color: Colors.green),
             ),
             12.verticalSpace,
-            FutureBuilder<User>(
-              future: apiService.fetchUserData(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: Text("User"));
-                } else if (snapshot.hasError) {
-                  return Center(child: Text("Error"));
-                } else if (snapshot.hasData) {
-                  return Text(
-                    snapshot.data!.name,
-                    style: TextStyle(
-                      fontSize: 24.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  );
-                }
-                return Center(child: Text("No data found"));
-              },
-            ),
+            // FutureBuilder<User>(
+            //   future: apiService.fetchUserData(),
+            //   builder: (context, snapshot) {
+            //     if (snapshot.connectionState == ConnectionState.waiting) {
+            //       return Center(child: Text("User"));
+            //     } else if (snapshot.hasError) {
+            //       return Center(child: Text("Error"));
+            //     } else if (snapshot.hasData) {
+            //       return Text(
+            //         snapshot.data!.name,
+            //         style: TextStyle(
+            //           fontSize: 24.sp,
+            //           fontWeight: FontWeight.bold,
+            //         ),
+            //       );
+            //     }
+            //     return Center(child: Text("No data found"));
+            //   },
+            // ),
 
-            FutureBuilder<User>(
-              future: apiService.fetchUserData(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: Text("email"));
-                } else if (snapshot.hasError) {
-                  return Center(child: Text("Error"));
-                } else if (snapshot.hasData) {
-                  return Text(
-                    snapshot.data!.email,
-                    style: TextStyle(
-                      fontSize: 24.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  );
-                }
-                return Center(child: Text("No data found"));
-              },
-            ),
+            // FutureBuilder<User>(
+            //   future: apiService.fetchUserData(),
+            //   builder: (context, snapshot) {
+            //     if (snapshot.connectionState == ConnectionState.waiting) {
+            //       return Center(child: Text("email"));
+            //     } else if (snapshot.hasError) {
+            //       return Center(child: Text("Error"));
+            //     } else if (snapshot.hasData) {
+            //       return Text(
+            //         snapshot.data!.email,
+            //         style: TextStyle(
+            //           fontSize: 24.sp,
+            //           fontWeight: FontWeight.bold,
+            //         ),
+            //       );
+            //     }
+            //     return Center(child: Text("No data found"));
+            //   },
+            // ),
             20.verticalSpace,
 
             // 2. Quick Stats Row
@@ -93,10 +94,10 @@ class UserScreen extends StatelessWidget {
             20.verticalSpace,
 
             // 4. Preferences & Settings
-            _buildSectionHeader("Preferences"),
+            _buildSectionHeader("Mode Control"),
             ListTile(
-              leading: const Icon(Icons.notifications_active),
-              title: const Text("Watering Reminders"),
+              leading: const Icon(Icons.auto_mode),
+              title: const Text("Automate"),
               trailing: ValueListenableBuilder(
                 valueListenable: reminderSwitch,
                 builder: (context, value, child) => Switch(
@@ -120,6 +121,27 @@ class UserScreen extends StatelessWidget {
               title: const Text("Saved Care Guides"),
               trailing: const Icon(Icons.chevron_right),
               onTap: () {},
+            ),
+            10.verticalSpace,
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: green),
+              onPressed: () {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return SignInScreen();
+                    },
+                  ),
+                );
+              },
+              child: Text(
+                "Log out",
+                style: TextStyle(
+                  color: white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
             ),
             100.verticalSpace,
           ],

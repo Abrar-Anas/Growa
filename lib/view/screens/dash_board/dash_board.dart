@@ -4,11 +4,15 @@ import 'package:growa/model/colors/colors.dart';
 import 'package:growa/model/glassbottomnav.dart';
 import 'package:growa/view/screens/disease/disease_listing_page.dart';
 import 'package:growa/view/screens/home_screen/home_screen.dart';
-import 'package:growa/view/screens/stats/stats_screen_two.dart';
 import 'package:growa/view/screens/user_screen/user_screen.dart';
 
 class DashBoard extends StatelessWidget {
-  DashBoard({super.key});
+  DashBoard({
+    this.isAutomated = false,
+    this.onToggleMode,
+    this.wsStatus = 0,
+    super.key,
+  });
 
   final PageController pageController = PageController(initialPage: 1);
 
@@ -18,29 +22,25 @@ class DashBoard extends StatelessWidget {
 
   final double fixedGlassWidth = 90;
 
-  final List<IconData> icons = [
-    Icons.auto_graph,
-    Icons.home,
-    Icons.dangerous,
-    Icons.person,
-  ];
+  final List<IconData> icons = [Icons.dangerous, Icons.home, Icons.person];
 
-  final List<String> labelData = ["STATS", "HOME", "DISEASE", "USER"];
+  final List<String> labelData = ["DISEASE", "HOME", "USER"];
 
-  final List<Widget> screens = [
-    StatsScreenTwo(),
-    HomeScreen(),
-    DiseaseListPage(),
-    UserScreen(),
-  ];
-
+  final List<Widget> screens = [DiseaseListPage(), HomeScreen(), UserScreen()];
+  final bool isAutomated;
+  final int wsStatus;
+  final VoidCallback? onToggleMode;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
       bottomNavigationBar: _bottomNavigationBar(),
       drawer: Drawer(),
-      appBar: _appBar(),
+      appBar: ClayAppBar(
+        isAutomated: isAutomated,
+        wsStatus: wsStatus,
+        onToggleMode: () => onToggleMode?.call(),
+      ),
       backgroundColor: tint,
       body: NotificationListener<ScrollNotification>(
         onNotification: (notification) {
@@ -206,21 +206,27 @@ class DashBoard extends StatelessWidget {
   }
 }
 
-AppBar _appBar() {
-  return AppBar(
-    backgroundColor: tint,
-    centerTitle: true,
-    title: Column(
-      children: [
-        Text(
-          "Growa",
-          style: TextStyle(
-            color: green,
-            fontWeight: FontWeight.bold,
-            fontSize: 30.sp,
-          ),
-        ),
-      ],
-    ),
-  );
-}
+// AppBar _appBar() {
+//   return AppBar(
+//     backgroundColor: tint,
+//     actions: [
+//       CircleAvatar(
+//         backgroundColor: Colors.green.shade500,
+//         child: Text(
+//           "A",
+//           style: TextStyle(color: white, fontWeight: FontWeight.w400),
+//         ),
+//       ),
+//     ],
+//     actionsPadding: EdgeInsets.all(12),
+//     centerTitle: true,
+//     title: Text(
+//       "Growa",
+//       style: TextStyle(
+//         color: green,
+//         fontWeight: FontWeight.bold,
+//         fontSize: 30.sp,
+//       ),
+//     ),
+//   );
+// }

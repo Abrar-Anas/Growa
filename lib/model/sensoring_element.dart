@@ -1,373 +1,226 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:growa/model/colors/colors.dart';
-import 'package:gauge_indicator/gauge_indicator.dart';
-import 'dart:ui';
 
-class lighting_conditon extends StatelessWidget {
+// The floating elements hovering over the plant
+class MinimalPlantStat extends StatelessWidget {
+  final IconData icon;
+  final String value;
+  final String label;
+
+  const MinimalPlantStat({super.key, required this.icon, required this.value, required this.label});
+
+  @override
   Widget build(BuildContext context) {
     return Container(
-      width: 140.w,
-      height: 50.h,
+      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 231, 231, 231),
-        borderRadius: BorderRadius.circular(10),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(30.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 15,
+            spreadRadius: 2,
+            offset: const Offset(0, 6),
+          )
+        ],
+        border: Border.all(color: Colors.grey.shade100, width: 1),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0).r,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(Icons.wb_sunny_outlined, size: 20.sp, color: lightgreen),
-            5.horizontalSpace,
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Light Conditon",
-                  style: TextStyle(color: black, fontSize: 13.sp),
-                ),
-                Text(
-                  "Minimal",
-                  style: TextStyle(color: black, fontSize: 10.sp),
-                ),
-              ],
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: EdgeInsets.all(6.w),
+            decoration: BoxDecoration(
+              color: tint,
+              shape: BoxShape.circle,
             ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class glass_Humidity extends StatelessWidget {
-  Widget build(BuildContext context) {
-    return Positioned(
-      top: 150.h,
-      left: 5.w,
-      width: 130.w,
-      height: 100.h,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20.r),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20.r),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
-            // Move your gradient here
-            gradient: LinearGradient(
-              colors: [
-                Colors.white.withValues(alpha: 0.2),
-                Colors.white.withValues(alpha: 0.05),
-              ],
-            ),
+            child: Icon(icon, size: 14.sp, color: green),
           ),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: Container(
-              width: 100.w,
-              height: 87.h,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.2),
-                  width: 1.5,
-                ),
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Colors.white.withValues(alpha: 0.2),
-                    Colors.white.withValues(alpha: 0.05),
-                  ],
+          10.horizontalSpace,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                value,
+                style: TextStyle(
+                  color: black,
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -0.2,
                 ),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text("Humidity", style: TextStyle(color: tfcolor)),
-                    2.verticalSpace,
-                    SizedBox(
-                      height: 50,
-                      width: 200,
-                      child: AnimatedRadialGauge(
-                        duration: const Duration(milliseconds: 1500),
-                        value: 75,
-                        axis: GaugeAxis(
-                          min: 0,
-                          max: 100,
-                          pointer: GaugePointer.needle(
-                            width: 4,
-                            height: 50,
-                            color: Colors.black,
-                            borderRadius: 16,
-                          ),
-                          degrees: 180,
-                          style: GaugeAxisStyle(
-                            thickness: 20,
-                            background: Colors.grey.withValues(alpha: 0.2),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ), // Your content here
+              Text(
+                label,
+                style: TextStyle(
+                  color: tfcolor,
+                  fontSize: 10.sp,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            ),
+            ],
           ),
-        ),
+        ],
       ),
     );
   }
 }
 
 class glass_soil_moisture extends StatelessWidget {
+  @override
   Widget build(BuildContext context) {
     return Positioned(
-      top: 10.h,
-      right: 100.w,
-      left: 100.w,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20.r),
-        child: Stack(
-          children: [
-            // 1. The Blur Layer
-            BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-              child: SizedBox(
-                width: 100.w,
-                height: 60.h,
-              ), // This empty container carries the blur
-            ),
-            // 2. The Tint and Border Layer
-            Container(
-              width: 150.w,
-              height: 68.h,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20.r),
-                border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.2), // The "Edge"
-                  width: 1.5,
-                ),
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Colors.white.withValues(alpha: 0.2), // Top-left sheen
-                    Colors.white.withValues(
-                      alpha: 0.05,
-                    ), // Bottom-right transparency
-                  ],
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(15.0).r,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Soil Moisture", style: TextStyle(color: tfcolor)),
-
-                    Text(
-                      "Dry & Cracked",
-                      style: TextStyle(
-                        color: black,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 15,
-                      ),
-                    ),
-                  ],
-                ), // Your content here
-              ),
-            ),
-          ],
-        ),
+      top: 60.h,
+      right: 15.w,
+      child: MinimalPlantStat(
+        icon: Icons.water_drop_rounded,
+        value: "32%",
+        label: "Moisture",
       ),
     );
   }
 }
 
 class glass_temperature extends StatelessWidget {
+  @override
   Widget build(BuildContext context) {
     return Positioned(
-    top: 150.h,
-    left: 200.w,
-    width: 130.w,
-    height: 100.h,
-    child: ClipRRect(
-      borderRadius: BorderRadius.circular(20.r),
-      child: Container(
-        decoration: BoxDecoration(),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Container(
-            width: 100.w,
-            height: 87.h,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20.r),
-              border: Border.all(
-                color: Colors.white.withValues(alpha: 0.2), // The "Edge"
-                width: 1.5,
-              ),
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Colors.white.withValues(alpha: 0.2), // Top-left sheen
-                  Colors.white.withValues(
-                    alpha: 0.05,
-                  ), // Bottom-right transparency
-                ],
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text("Temperature", style: TextStyle(color: tfcolor)),
-                  2.verticalSpace,
-
-                  // Inside your build method:
-                  SizedBox(
-                    height: 50,
-                    width: 200,
-                    child: AnimatedRadialGauge(
-                      duration: const Duration(milliseconds: 1500),
-                      value: 50, // The percentage (0 to 100)
-                      axis: GaugeAxis(
-                        min: 0,
-                        max: 100,
-                        pointer: GaugePointer.needle(
-                          width: 4,
-                          height: 50,
-                          color: Colors.black,
-                          borderRadius: 16,
-                        ),
-                        degrees:
-                            180, // Makes it a semi-circle like a speedometer
-                        style: GaugeAxisStyle(
-                          thickness: 20,
-                          background: Colors.grey.withValues(alpha: 0.2),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ), // Your content here
-            ),
-          ),
-        ), // This empty container carries the blur
+      top: 220.h,
+      left: 10.w,
+      child: MinimalPlantStat(
+        icon: Icons.thermostat_rounded,
+        value: "24°C",
+        label: "Temperature",
       ),
-    ),
-  );
+    );
   }
-  }
+}
 
-class fertilization extends StatelessWidget {
+class glass_Humidity extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      top: 170.h,
+      right: 0.w,
+      child: MinimalPlantStat(
+        icon: Icons.air_rounded,
+        value: "60%",
+        label: "Humidity",
+      ),
+    );
+  }
+}
+
+// Flat detailed items
+class MinimalDetailItem extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+
+  const MinimalDetailItem({super.key, required this.icon, required this.title, required this.subtitle});
+
+  @override
   Widget build(BuildContext context) {
     return Container(
-    width: 140.w,
-    height: 50.h,
-    decoration: BoxDecoration(
-      color: const Color.fromARGB(255, 231, 231, 231),
-      borderRadius: BorderRadius.circular(10),
-    ),
-    child: Padding(
-      padding: const EdgeInsets.all(8.0).r,
+      padding: EdgeInsets.all(14.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          )
+        ],
+        border: Border.all(color: Colors.grey.shade100, width: 1.5),
+      ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(Icons.energy_savings_leaf, size: 20.sp, color: lightgreen),
-          5.horizontalSpace,
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Fertilization ",
-                style: TextStyle(color: black, fontSize: 13.sp),
-              ),
-              Text(
-                "Balanced",
-                style: TextStyle(color: black, fontSize: 10.sp),
-              ),
-            ],
+          Container(
+            padding: EdgeInsets.all(10.w),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade50,
+              borderRadius: BorderRadius.circular(12.r),
+              border: Border.all(color: Colors.grey.shade100, width: 1),
+            ),
+            child: Icon(icon, size: 20.sp, color: green),
+          ),
+          12.horizontalSpace,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: tfcolor,
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                2.verticalSpace,
+                Text(
+                  subtitle,
+                  style: TextStyle(
+                    color: black,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: -0.2,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
-    ),
-  );
-    }
+    );
+  }
+}
+
+class lighting_conditon extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MinimalDetailItem(
+      icon: Icons.wb_sunny_rounded,
+      title: "Light",
+      subtitle: "Minimal",
+    );
+  }
 }
 
 class humidity_level extends StatelessWidget {
+  @override
   Widget build(BuildContext context) {
-    return Container(
-    width: 140.w,
-    height: 50.h,
-    decoration: BoxDecoration(
-      color: const Color.fromARGB(255, 231, 231, 231),
-      borderRadius: BorderRadius.circular(10),
-    ),
-    child: Padding(
-      padding: const EdgeInsets.all(8.0).r,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(Icons.thermostat_outlined, size: 20.sp, color: lightgreen),
-          5.horizontalSpace,
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Humidity Level",
-                style: TextStyle(color: black, fontSize: 13.sp),
-              ),
-              Text(
-                "70%",
-                style: TextStyle(color: black, fontSize: 10.sp),
-              ),
-            ],
-          ),
-        ],
-      ),
-    ),
-  );
+    return MinimalDetailItem(
+      icon: Icons.water_drop_rounded,
+      title: "Humidity",
+      subtitle: "70%",
+    );
   }
 }
 
 class soil_health extends StatelessWidget {
+  @override
   Widget build(BuildContext context) {
-    return Container(
-    width: 140.w,
-    height: 50.h,
-    decoration: BoxDecoration(
-      color: const Color.fromARGB(255, 231, 231, 231),
-      borderRadius: BorderRadius.circular(10),
-    ),
-    child: Padding(
-      padding: const EdgeInsets.all(8.0).r,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(Icons.waves_outlined, size: 20.sp, color: lightgreen),
-          5.horizontalSpace,
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Soil Health",
-                style: TextStyle(color: black, fontSize: 13.sp),
-              ),
-              Text(
-                "Dry & Cracked",
-                style: TextStyle(color: black, fontSize: 10.sp),
-              ),
-            ],
-          ),
-        ],
-      ),
-    ),
-  );
+    return MinimalDetailItem(
+      icon: Icons.grass_rounded,
+      title: "Soil",
+      subtitle: "Dry",
+    );
+  }
+}
+
+class fertilization extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MinimalDetailItem(
+      icon: Icons.energy_savings_leaf_rounded,
+      title: "Fertilizer",
+      subtitle: "Balanced",
+    );
   }
 }

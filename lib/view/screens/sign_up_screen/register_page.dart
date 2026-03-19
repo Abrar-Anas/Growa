@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:growa/controllers/auth_service.dart';
 import 'package:growa/view/screens/dash_board/dash_board.dart';
+import 'package:growa/view/screens/sign_in_screen/sign_in_screen.dart';
 
 class GrowaRegisterPage extends StatelessWidget {
   const GrowaRegisterPage({super.key});
@@ -19,10 +20,13 @@ class GrowaRegisterPage extends StatelessWidget {
         TextEditingController();
     final TextEditingController _cityController = TextEditingController();
     final TextEditingController _pincodeController = TextEditingController();
+    final TextEditingController _stateController = TextEditingController();
+    final TextEditingController _greenhouse_name_Controller =
+        TextEditingController();
     return Scaffold(
       body: Stack(
         children: [
-          // Background Gradient
+          Icon(Icons.arrow_back),
           Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
@@ -41,6 +45,21 @@ class GrowaRegisterPage extends StatelessWidget {
               padding: const EdgeInsets.all(24.0),
               child: Column(
                 children: [
+                  Align(
+                    alignment: AlignmentGeometry.topLeft,
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return SignInScreen();
+                            },
+                          ),
+                        );
+                      },
+                      icon: Icon(Icons.arrow_back_ios),
+                    ),
+                  ),
                   _buildHeader(),
                   const SizedBox(height: 30),
                   _buildGlassCard(
@@ -76,16 +95,23 @@ class GrowaRegisterPage extends StatelessWidget {
                           isPassword: true,
                           _confirmPasswordController,
                         ),
+                        _customField(
+                          "Green House Name",
+                          Icons.house_outlined,
+                          _greenhouse_name_Controller,
+                        ),
 
                         const SizedBox(height: 20),
-                        _sectionHeader(
-                          "Shipping Address",
-                          Icons.local_shipping_outlined,
-                        ),
+                        _sectionHeader("Green House Address", Icons.home),
                         _customField(
                           "Address Line 1",
                           Icons.home_work_outlined,
                           _addressController,
+                        ),
+                        _customField(
+                          "State",
+                          Icons.location_on,
+                          _stateController,
                         ),
                         Row(
                           children: [
@@ -138,6 +164,9 @@ class GrowaRegisterPage extends StatelessWidget {
                         String address = _addressController.text;
                         String city = _cityController.text;
                         String pincode = _pincodeController.text;
+                        String state = _stateController.text;
+                        String greenhouseName =
+                            _greenhouse_name_Controller.text;
 
                         if (name.isEmpty || email.isEmpty || password.isEmpty) {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -156,6 +185,12 @@ class GrowaRegisterPage extends StatelessWidget {
                           email,
                           password,
                           confirmPassword,
+                          productID,
+                          address,
+                          pincode,
+                          city,
+                          state,
+                          greenhouseName,
                         );
                         if (responese?.statusCode == 201 ||
                             responese?.statusCode == 200) {
@@ -199,92 +234,6 @@ class GrowaRegisterPage extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Container _registerButton(
-    TextEditingController _nameController,
-    TextEditingController _emailController,
-    TextEditingController _passwordController,
-    TextEditingController _confirmPasswordController,
-    BuildContext context,
-    ApiService _apiService,
-  ) {
-    return Container(
-      width: double.infinity,
-      height: 55,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
-        gradient: const LinearGradient(
-          colors: [Color(0xFF4CAF50), Color(0xFF2E7D32)],
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.green.withOpacity(0.3),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      child: ElevatedButton(
-        onPressed: () async {
-          String name = _nameController.text.trim();
-          String email = _emailController.text.trim();
-          String password = _passwordController.text;
-          String confirmPassword = _confirmPasswordController.text;
-
-          if (name.isEmpty || email.isEmpty || password.isEmpty) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text("Fill Every Field")));
-            return;
-          }
-          if (confirmPassword != password) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text("Passwords do not match")));
-          }
-
-          final responese = await _apiService.signUp(
-            name,
-            email,
-            password,
-            confirmPassword,
-          );
-          if (responese?.statusCode == 201 || responese?.statusCode == 200) {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (context) {
-                  return DashBoard();
-                },
-              ),
-            );
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  "${responese?.data['message'] ?? 'Registration failed'}",
-                ),
-              ),
-            );
-          }
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.transparent,
-          shadowColor: Colors.transparent,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
-        ),
-        child: const Text(
-          "Create My Garden",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
       ),
     );
   }

@@ -40,17 +40,6 @@ class DiseaseListPage extends StatelessWidget {
       data: theme,
       child: Scaffold(
         backgroundColor: tint,
-        appBar: AppBar(
-          backgroundColor: tint,
-          title: const Text(
-            "Plant Disease Guide",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 28,
-              color: Colors.black,
-            ),
-          ),
-        ),
         body: Column(
           children: [
             // 1. Search and Filter Bar
@@ -65,7 +54,7 @@ class DiseaseListPage extends StatelessWidget {
                     filled: true,
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(30),
                       borderSide: BorderSide.none,
                     ),
                   ),
