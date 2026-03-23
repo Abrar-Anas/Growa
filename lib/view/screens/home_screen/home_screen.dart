@@ -67,14 +67,15 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future<Map<String, dynamic>> fetchNotification() async {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      // Get the token (defaulting to empty string if null)
-      String? token = prefs.getString('token') ?? '';
+    
+    // Future<Map<String, dynamic>> fetchNotification() async {
+    //   final SharedPreferences prefs = await SharedPreferences.getInstance();
+    //   // Get the token (defaulting to empty string if null)
+    //   String? token = prefs.getString('token') ?? '';
 
-      // 2. Now call your API service using that token
-      return await apiService.getNotifications(token);
-    }
+    //   // 2. Now call your API service using that token
+    //   return await apiService.getNotifications(token);
+    // }
 
     return Scaffold(
       backgroundColor: const Color(0xFFE8F5E9),
@@ -122,67 +123,67 @@ class HomeScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Smart Alerts Feature
-                    SizedBox(
-                      height: 48,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        physics: const BouncingScrollPhysics(),
-                        itemCount: alerts.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.only(right: 12.0),
-                            child: FutureBuilder<Map<String, dynamic>>(
-                              future: fetchNotification(),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return const Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                } else if (snapshot.hasError) {
-                                  return Center(
-                                    child: Text('Error: ${snapshot.error}'),
-                                  );
-                                } else if (!snapshot.hasData ||
-                                    snapshot.data!.isEmpty) {
-                                  return const Center(
-                                    child: Text('No notifications found.'),
-                                  );
-                                }
+                    // SizedBox(
+                    //   height: 48,
+                    //   child: ListView.builder(
+                    //     scrollDirection: Axis.horizontal,
+                    //     physics: const BouncingScrollPhysics(),
+                    //     itemCount: alerts.length,
+                    //     itemBuilder: (context, index) {
+                    //       return Padding(
+                    //         padding: const EdgeInsets.only(right: 12.0),
+                    //         child: FutureBuilder<Map<String, dynamic>>(
+                    //           future: fetchNotification(),
+                    //           builder: (context, snapshot) {
+                    //             if (snapshot.connectionState ==
+                    //                 ConnectionState.waiting) {
+                    //               return const Center(
+                    //                 child: CircularProgressIndicator(),
+                    //               );
+                    //             } else if (snapshot.hasError) {
+                    //               return Center(
+                    //                 child: Text('Error: ${snapshot.error}'),
+                    //               );
+                    //             } else if (!snapshot.hasData ||
+                    //                 snapshot.data!.isEmpty) {
+                    //               return const Center(
+                    //                 child: Text('No notifications found.'),
+                    //               );
+                    //             }
 
-                                final notification = snapshot.data!;
+                    //             final notification = snapshot.data!;
 
-                                return ListView.builder(
-                                  itemCount: 5,
-                                  itemBuilder: (context, index) {
-                                    final note = notification[index];
-                                    return Card(
-                                      margin: const EdgeInsets.symmetric(
-                                        horizontal: 10,
-                                        vertical: 5,
-                                      ),
-                                      child: ListTile(
-                                        leading: const Icon(
-                                          Icons.notifications_active,
-                                          color: Colors.orange,
-                                        ),
-                                        // Adjust these keys based on your actual server response body
-                                        title: Text(
-                                          "Message: ${notification.toString()}",
-                                        ),
-                                        subtitle: Text(
-                                          note['created_at'] ?? '',
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                            ),
-                          );
-                        },
-                      ),
-                    ),
+                    //             return ListView.builder(
+                    //               itemCount: 5,
+                    //               itemBuilder: (context, index) {
+                    //                 final note = notification[index];
+                    //                 return Card(
+                    //                   margin: const EdgeInsets.symmetric(
+                    //                     horizontal: 10,
+                    //                     vertical: 5,
+                    //                   ),
+                    //                   child: ListTile(
+                    //                     leading: const Icon(
+                    //                       Icons.notifications_active,
+                    //                       color: Colors.orange,
+                    //                     ),
+                    //                     // Adjust these keys based on your actual server response body
+                    //                     title: Text(
+                    //                       "Message: ${notification.toString()}",
+                    //                     ),
+                    //                     subtitle: Text(
+                    //                       note['created_at'] ?? '',
+                    //                     ),
+                    //                   ),
+                    //                 );
+                    //               },
+                    //             );
+                    //           },
+                    //         ),
+                    //       );
+                    //     },
+                    //   ),
+                    // ),
                     const SizedBox(height: 24),
 
                     // Weather Card
@@ -212,6 +213,7 @@ class HomeScreen extends StatelessWidget {
                           return Center(child: Text("No data found"));
                         },
                       ),
+                      temp:temperature,
                       humidity: humidity,
                       soilMoisture: soilMoisture,
                       sunlight: sunlight,
@@ -413,7 +415,7 @@ class ClayAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                   const SizedBox(width: 8),
                   const Text(
-                    'Oasis',
+                    'Growa',
                     style: TextStyle(
                       color: Color(0xFF1E293B),
                       fontWeight: FontWeight.w900,
@@ -490,41 +492,7 @@ class _ModeToggleBadge extends StatelessWidget {
                   ),
                 ),
               ),
-              Positioned.fill(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: Opacity(
-                        opacity: isAutomated ? 1.0 : 0.0,
-                        child: const Text(
-                          'AUTO',
-                          style: TextStyle(
-                            color: Color(0xFF10B981),
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: Opacity(
-                        opacity: !isAutomated ? 1.0 : 0.0,
-                        child: const Text(
-                          'MANL',
-                          style: TextStyle(
-                            color: Color(0xFF1E293B),
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+             
             ],
           ),
         ),
@@ -723,6 +691,7 @@ class SectionHeader extends StatelessWidget {
 
 class ParameterGrid extends StatelessWidget {
   final Widget temperature;
+  final double temp;
   final double humidity;
   final double soilMoisture;
   final double sunlight;
@@ -730,6 +699,7 @@ class ParameterGrid extends StatelessWidget {
   const ParameterGrid({
     Key? key,
     required this.temperature,
+    required this.temp,
     required this.humidity,
     required this.soilMoisture,
     required this.sunlight,
@@ -746,14 +716,14 @@ class ParameterGrid extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       clipBehavior: Clip.none,
       children: [
-        // ClayGaugeCard(
-        //   title: 'Temperature',
-        //   value: temperature,
-        //   minVal: 0,
-        //   maxVal: 50,
-        //   unit: '°C',
-        //   icon: Icons.thermostat_rounded,
-        // ),
+        ClayGaugeCard(
+          title: 'Temperature',
+          value: temp,
+          minVal: 0,
+          maxVal: 50,
+          unit: '°C',
+          icon: Icons.thermostat_rounded,
+        ),
         ClayGaugeCard(
           title: 'Humidity',
           value: humidity,
@@ -771,7 +741,7 @@ class ParameterGrid extends StatelessWidget {
           icon: Icons.grass_rounded,
         ),
         ClayGaugeCard(
-          title: 'Sunlight',
+          title: 'Air Quality',
           value: sunlight,
           minVal: 0,
           maxVal: 100,
