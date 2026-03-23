@@ -1,201 +1,174 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:growa/controllers/auth_service.dart';
+import 'package:get/get.dart';
+import 'package:growa/controllers/profile_controller.dart';
 import 'package:growa/model/colors/colors.dart';
 import 'package:growa/view/screens/sign_in_screen/sign_in_screen.dart';
 
 class UserScreen extends StatelessWidget {
   UserScreen({super.key});
 
-  final ApiService apiService = ApiService();
-
-  final ValueNotifier<bool> reminderSwitch = ValueNotifier(false);
+  final ProfileController profileController = Get.put(ProfileController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: tint,
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0).r,
-        child: Column(
-          children: [
-            // 1. Identity Section
-            CircleAvatar(
-              backgroundColor: Colors.white,
-              radius: 50,
-              child: Icon(Icons.person, size: 70.sp, color: Colors.green),
-            ),
-            12.verticalSpace,
-            // FutureBuilder<User>(
-            //   future: apiService.fetchUserData(),
-            //   builder: (context, snapshot) {
-            //     if (snapshot.connectionState == ConnectionState.waiting) {
-            //       return Center(child: Text("User"));
-            //     } else if (snapshot.hasError) {
-            //       return Center(child: Text("Error"));
-            //     } else if (snapshot.hasData) {
-            //       return Text(
-            //         snapshot.data!.name,
-            //         style: TextStyle(
-            //           fontSize: 24.sp,
-            //           fontWeight: FontWeight.bold,
-            //         ),
-            //       );
-            //     }
-            //     return Center(child: Text("No data found"));
-            //   },
-            // ),
-
-            // FutureBuilder<User>(
-            //   future: apiService.fetchUserData(),
-            //   builder: (context, snapshot) {
-            //     if (snapshot.connectionState == ConnectionState.waiting) {
-            //       return Center(child: Text("email"));
-            //     } else if (snapshot.hasError) {
-            //       return Center(child: Text("Error"));
-            //     } else if (snapshot.hasData) {
-            //       return Text(
-            //         snapshot.data!.email,
-            //         style: TextStyle(
-            //           fontSize: 24.sp,
-            //           fontWeight: FontWeight.bold,
-            //         ),
-            //       );
-            //     }
-            //     return Center(child: Text("No data found"));
-            //   },
-            // ),
-            20.verticalSpace,
-
-            // 2. Quick Stats Row
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _buildStatColumn("12", "Plants"),
-                _buildStatColumn("94%", "Health"),
-                _buildStatColumn("5", "Badges"),
-              ],
-            ),
-            Divider(height: 40.h),
-
-            // 3. Garden Overview Section
-            _buildSectionHeader("My Garden Zones"),
-            SizedBox(
-              height: 100.h,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  _buildZoneCard(Icons.weekend, "Living Room"),
-                  _buildZoneCard(Icons.wb_sunny, "Balcony"),
-                  _buildZoneCard(Icons.work, "Office"),
-                ],
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 32.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Avatar
+              CircleAvatar(
+                backgroundColor: Colors.white,
+                radius: 48.r,
+                child: Icon(Icons.person_rounded, size: 56.sp, color: green),
               ),
-            ),
-            20.verticalSpace,
+              28.verticalSpace,
 
-            // 4. Preferences & Settings
-            _buildSectionHeader("Mode Control"),
-            ListTile(
-              leading: const Icon(Icons.auto_mode),
-              title: const Text("Automate"),
-              trailing: ValueListenableBuilder(
-                valueListenable: reminderSwitch,
-                builder: (context, value, child) => Switch(
-                  value: value,
-                  onChanged: (val) {
-                    reminderSwitch.value = val;
-                  },
-                  activeThumbColor: green,
+              // Info Card
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20.r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.06),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
+                child: Obx(() {
+                  if (profileController.isLoading.value) {
+                    return Padding(
+                      padding: EdgeInsets.all(32.h),
+                      child: const Center(child: CircularProgressIndicator(color: Colors.green)),
+                    );
+                  }
+                  
+                  if (profileController.hasError.value) {
+                     return Padding(
+                      padding: EdgeInsets.all(32.h),
+                      child: Center(
+                        child: Text(
+                          "Failed to load profile", 
+                          style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    );
+                  }
+
+                  return Column(
+                    children: [
+                      _buildInfoTile(
+                        icon: Icons.person_outline_rounded,
+                        label: "Name",
+                        value: profileController.userName.value,
+                        showDivider: true,
+                      ),
+                      _buildInfoTile(
+                        icon: Icons.email_outlined,
+                        label: "Email",
+                        value: profileController.userEmail.value,
+                        showDivider: true,
+                      ),
+                      _buildInfoTile(
+                        icon: Icons.location_on_outlined,
+                        label: "Greenhouse Address",
+                        value: profileController.greenhouseAddress.value,
+                        showDivider: false,
+                      ),
+                    ],
+                  );
+                }),
               ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.sensors),
-              title: const Text("IoT Sensor Sync"),
-              subtitle: const Text("Connected to 3 devices"),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: const Icon(Icons.bookmark),
-              title: const Text("Saved Care Guides"),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () {},
-            ),
-            10.verticalSpace,
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: green),
-              onPressed: () {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return SignInScreen();
-                    },
+
+              const Spacer(),
+
+              // Logout
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: green,
+                    foregroundColor: white,
+                    padding: EdgeInsets.symmetric(vertical: 14.h),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14.r),
+                    ),
+                    elevation: 0,
                   ),
-                );
-              },
-              child: Text(
-                "Log out",
-                style: TextStyle(
-                  color: white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
+                  icon: const Icon(Icons.logout_rounded),
+                  label: Text(
+                    "Log Out",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15.sp,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (_) => SignInScreen()),
+                    );
+                  },
                 ),
               ),
-            ),
-            100.verticalSpace,
-          ],
-        ),
-      ),
-    );
-  }
-
-  // Helper widget for Stats
-  Widget _buildStatColumn(String value, String label) {
-    return Column(
-      children: [
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 20.sp,
-            fontWeight: FontWeight.bold,
-            color: Colors.green,
+            ],
           ),
         ),
-        Text(label, style: const TextStyle(color: Colors.grey)),
+      ),
+    );
+  }
+
+  Widget _buildInfoTile({
+    required IconData icon,
+    required String label,
+    required String value,
+    required bool showDivider,
+  }) {
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(icon, color: green, size: 22.sp),
+              14.horizontalSpace,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      label,
+                      style: TextStyle(
+                        fontSize: 11.sp,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    4.verticalSpace,
+                    Text(
+                      value,
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        if (showDivider)
+          Divider(height: 1, indent: 56.w, color: Colors.grey.shade100),
       ],
-    );
-  }
-
-  // Helper widget for Zone Cards
-  Widget _buildZoneCard(IconData icon, String label) {
-    return Card(
-      child: Container(
-        width: 110.w,
-        padding: const EdgeInsets.all(8).r,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: Colors.green),
-            5.verticalSpace,
-            Text(label, style: TextStyle(fontSize: 12.sp)),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // Helper widget for Headers
-  Widget _buildSectionHeader(String title) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0).w,
-        child: Text(
-          title,
-          style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
-        ),
-      ),
     );
   }
 }

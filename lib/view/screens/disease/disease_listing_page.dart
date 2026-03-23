@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:growa/model/colors/colors.dart';
-import 'package:growa/model/mockdata.dart';
+import 'package:growa/model/disease.dart';
+import 'package:growa/controllers/disease_controller.dart';
 import 'package:growa/view/screens/disease/disease_details_page.dart';
 
 class DiseaseListPage extends StatelessWidget {
@@ -8,20 +10,10 @@ class DiseaseListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ValueNotifier<List<DiseaseModel>> filteredDiseases =
-        ValueNotifier<List<DiseaseModel>>(mockDiseases);
+    final DiseaseController controller = Get.put(DiseaseController());
 
     void _onSearchChanged(String query) {
-      if (query.isEmpty) {
-        filteredDiseases.value = mockDiseases;
-      } else {
-        filteredDiseases.value = mockDiseases
-            .where(
-              (disease) =>
-                  disease.name.toLowerCase().contains(query.toLowerCase()),
-            )
-            .toList();
-      }
+      controller.search(query);
     }
 
     // Theme setup for consistent design
@@ -64,16 +56,36 @@ class DiseaseListPage extends StatelessWidget {
 
             // 2. The Scrollable List
             Expanded(
-              child: ValueListenableBuilder<List<DiseaseModel>>(
-                valueListenable: filteredDiseases,
-                builder: (context, currentList, _) {
-                  if (currentList.isEmpty) {
-                    return const Center(
-                      child: Text("No diseases found matching that name."),
-                    );
-                  }
+              child: Obx(() {
+                if (controller.isLoading.value) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                
+                if (controller.hasError.value) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Failed to load diseases."),
+                        ElevatedButton(
+                          onPressed: () => controller.fetchDiseases(),
+                          child: const Text("Retry"),
+                        )
+                      ],
+                    ),
+                  );
+                }
 
-                  return ListView.separated(
+                final currentList = controller.filteredDiseases;
+                if (currentList.isEmpty) {
+                  return const Center(
+                    child: Text("No diseases found matching that name."),
+                  );
+                }
+
+                return RefreshIndicator(
+                  onRefresh: controller.fetchDiseases,
+                  child: ListView.separated(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16,
                       vertical: 8,
@@ -84,9 +96,9 @@ class DiseaseListPage extends StatelessWidget {
                       final disease = currentList[index];
                       return DiseaseListCard(disease: disease);
                     },
-                  );
-                },
-              ),
+                  ),
+                );
+              }),
             ),
           ],
         ),
@@ -135,7 +147,7 @@ class DiseaseListCard extends StatelessWidget {
                     color: const Color(0xFFEEF9EE), // Very pale green
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: disease.diseaseIllustration,
+                  child: disease.thumbnailIllustration,
                 ),
                 const SizedBox(width: 16),
 

@@ -15,7 +15,7 @@ class Websocket extends StatefulWidget {
 class _WebsocketState extends State<Websocket> {
   WebSocketChannel channel = WebSocketChannel.connect(
     Uri.parse(
-      "ws://51.21.132.209/app/nywcgjbzz5yhljss7pbt?protocol=7&client=js&version=8.4.0-rc2&flash=false",
+      "ws://16.16.57.108/app/nywcgjbzz5yhljss7pbt?protocol=7&client=js&version=8.4.0-rc2&flash=false",
     ),
   );
 
@@ -26,7 +26,7 @@ class _WebsocketState extends State<Websocket> {
     // 1. Connect
     channel = WebSocketChannel.connect(
       Uri.parse(
-        'ws://51.21.132.209/app/nywcgjbzz5yhljss7pbt?protocol=7&client=js&version=8.4.0-rc2&flash=false',
+        'ws://16.16.57.108/app/nywcgjbzz5yhljss7pbt?protocol=7&client=js&version=8.4.0-rc2&flash=false',
       ),
     );
 

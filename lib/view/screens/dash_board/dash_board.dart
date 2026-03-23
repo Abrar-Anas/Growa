@@ -2,17 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:growa/model/colors/colors.dart';
 import 'package:growa/model/glassbottomnav.dart';
+import 'package:get/get.dart';
+import 'package:growa/controllers/websocket_controller.dart';
 import 'package:growa/view/screens/disease/disease_listing_page.dart';
 import 'package:growa/view/screens/home_screen/home_screen.dart';
 import 'package:growa/view/screens/user_screen/user_screen.dart';
 
 class DashBoard extends StatelessWidget {
   DashBoard({
-    this.isAutomated = false,
     this.onToggleMode,
-    this.wsStatus = 0,
     super.key,
   });
+
+  final WebsocketController wsController = Get.put(WebsocketController());
 
   final PageController pageController = PageController(initialPage: 1);
 
@@ -27,8 +29,6 @@ class DashBoard extends StatelessWidget {
   final List<String> labelData = ["DISEASE", "HOME", "USER"];
 
   final List<Widget> screens = [DiseaseListPage(), HomeScreen(), UserScreen()];
-  final bool isAutomated;
-  final int wsStatus;
   final VoidCallback? onToggleMode;
   @override
   Widget build(BuildContext context) {
@@ -36,10 +36,16 @@ class DashBoard extends StatelessWidget {
       extendBody: true,
       bottomNavigationBar: _bottomNavigationBar(),
       drawer: Drawer(),
-      appBar: ClayAppBar(
-        isAutomated: isAutomated,
-        wsStatus: wsStatus,
-        onToggleMode: () => onToggleMode?.call(),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(70),
+        child: Obx(() => ClayAppBar(
+          isAutomated: wsController.isAutomated.value,
+          wsStatus: wsController.wsStatus.value,
+          onToggleMode: () {
+            wsController.toggleMode();
+            onToggleMode?.call();
+          },
+        )),
       ),
       backgroundColor: tint,
       body: NotificationListener<ScrollNotification>(

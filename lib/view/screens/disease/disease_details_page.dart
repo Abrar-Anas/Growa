@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:growa/model/colors/colors.dart';
-import 'package:growa/model/mockdata.dart';
+import 'package:growa/model/disease.dart';
 
 class DiseaseDetailPage extends StatelessWidget {
   final DiseaseModel disease;
@@ -29,7 +29,7 @@ class DiseaseDetailPage extends StatelessWidget {
             // 1. Illustration Header with Gradient
             Container(
               width: double.infinity,
-              height: 220,
+              height: 250,
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
@@ -37,7 +37,13 @@ class DiseaseDetailPage extends StatelessWidget {
                   colors: [Color(0xFFE0F2F1), Colors.white],
                 ),
               ),
-              child: Center(child: disease.diseaseIllustration),
+              child: ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(24),
+                  bottomRight: Radius.circular(24),
+                ),
+                child: disease.headerIllustration,
+              ),
             ),
 
             Padding(

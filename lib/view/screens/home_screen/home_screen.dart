@@ -1,16 +1,13 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:growa/controllers/auth_service.dart';
 import 'package:growa/controllers/real_time_weather.dart';
-import 'package:growa/controllers/websocket.dart';
+import 'package:get/get.dart';
+import 'package:growa/controllers/websocket_controller.dart';
 import 'package:growa/view/screens/parameter_details.dart';
 import 'dart:math';
-import 'dart:ui';
 
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
 
 /// ==========================================
 /// PURE STATELESS CORE DASHBOARD
@@ -18,15 +15,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 /// This architecture expects state to be passed down
 /// from a state management solution (BLoC, Riverpod, Provider, etc.)
 class HomeScreen extends StatelessWidget {
-  final int wsStatus; // 0: Connected, 1: Reconnecting, 2: Disconnected
-  final bool isAutomated;
-  final bool fanStatus;
-  final bool pumpStatus;
-
-  final double temperature;
-  final double humidity;
-  final double soilMoisture;
-  final double sunlight;
+  final WebsocketController wsController = Get.put(WebsocketController());
 
   final String weatherTemp;
   final String weatherCondition;
@@ -43,22 +32,8 @@ class HomeScreen extends StatelessWidget {
 
   final ApiService apiService = ApiService();
 
-  final WebSocketChannel channel = WebSocketChannel.connect(
-    Uri.parse(
-      "ws://51.21.132.209/app/nywcgjbzz5yhljss7pbt?protocol=7&client=js&version=8.4.0-rc2&flash=false",
-    ),
-  );
-
   HomeScreen({
     Key? key,
-    this.wsStatus = 0,
-    this.isAutomated = true,
-    this.fanStatus = false,
-    this.pumpStatus = false,
-    this.temperature = 23.5,
-    this.humidity = 60.0,
-    this.soilMoisture = 45.0,
-    this.sunlight = 75.0,
     this.weatherTemp = '24°C',
     this.weatherCondition = 'Partly cloudy',
     this.locationName = 'Greenhouse 1',
@@ -202,7 +177,7 @@ class HomeScreen extends StatelessWidget {
 
                     const SectionHeader(title: 'Live Telemetry'),
                     const SizedBox(height: 16),
-                    ParameterGrid(
+                    Obx(() => ParameterGrid(
                       temperature: FutureBuilder<User>(
                         future: apiService.fetchSensorData(),
                         builder: (context, snapshot) {
@@ -223,81 +198,34 @@ class HomeScreen extends StatelessWidget {
                           return Center(child: Text("No data found"));
                         },
                       ),
-                      temp:temperature,
-                      humidity: humidity,
-                      soilMoisture: soilMoisture,
-                      sunlight: sunlight,
-                    ),
+                      temp: wsController.temperature.value,
+                      humidity: wsController.humidity.value,
+                      soilMoisture: wsController.soilMoisture.value,
+                      sunlight: wsController.sunlight.value,
+                    )),
                     const SizedBox(height: 32),
 
-                    SectionHeader(
-                      title: isAutomated
+                    Obx(() => SectionHeader(
+                      title: wsController.isAutomated.value
                           ? 'Auto Protocol Active'
                           : 'Manual Overrides',
-                    ),
+                    )),
                     const SizedBox(height: 16),
-                    SystemControlsClay(
-                      isAutomated: isAutomated,
-                      fanStatus: fanStatus,
-                      pumpStatus: pumpStatus,
-                      onFanToggle: (val) => onFanToggle?.call(val),
-                      onPumpToggle: (val) => onPumpToggle?.call(val),
-                    ),
-                    const SizedBox(
-                      height: 140,
-                    ), // Extra space for the plant image
-                    Container(
-                      child: StreamBuilder(
-                        stream: channel.stream,
-                        builder: (context, snapshot) {
-                          if (snapshot.hasError) {
-                            return Text('Error: ${snapshot.error}');
-                          }
-                          if (!snapshot.hasData) {
-                            return CircularProgressIndicator();
-                          }
-
-                          // 3. Parse the JSON data
-                          // Handling possibility of double encoded string
-                          var decodedRaw = jsonDecode(snapshot.data);
-                          if (decodedRaw is String) {
-                            try {
-                              decodedRaw = jsonDecode(decodedRaw);
-                            } catch (_) {}
-                          }
-
-                          var humidityValue = '--';
-                          if (decodedRaw is Map<String, dynamic>) {
-                            var dataObj = decodedRaw['data'];
-                            if (dataObj is String) {
-                              try {
-                                dataObj = jsonDecode(dataObj);
-                              } catch (_) {}
-                            }
-                            if (dataObj is Map && dataObj['humidity'] != null) {
-                              humidityValue = dataObj['humidity'].toString();
-                            }
-                          }
-
-                          return Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Current Humidity",
-                                style: TextStyle(fontSize: 20),
-                              ),
-                              Text(
-                                "$humidityValue%",
-                                style: TextStyle(
-                                  fontSize: 48,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                    ),
+                    Obx(() => SystemControlsClay(
+                      isAutomated: wsController.isAutomated.value,
+                      fanStatus: wsController.exhaustMode.value,
+                      pumpStatus: wsController.pumpMode.value,
+                      onFanToggle: (val) {
+                        wsController.toggleFan(val);
+                        onFanToggle?.call(val);
+                      },
+                      onPumpToggle: (val) {
+                        wsController.togglePump(val);
+                        onPumpToggle?.call(val);
+                      },
+                    )),
+                    // Extra space for the plant image
+                    
                   ],
                 ),
               ),
@@ -428,13 +356,9 @@ class ClayAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   Color get _wsColor => wsStatus == 0
       ? const Color(0xFF10B981)
-      : wsStatus == 1
-      ? const Color(0xFFF59E0B)
       : const Color(0xFFEF4444);
   String get _wsText => wsStatus == 0
       ? 'Connected'
-      : wsStatus == 1
-      ? 'Reconnecting'
       : 'Disconnected';
 
   @override
@@ -576,6 +500,47 @@ class _ConnectionBadgeFull extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isDisconnected = text == 'Disconnected';
+    
+    if (isDisconnected) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        decoration: BoxDecoration(
+          color: const Color(0xFFEF4444),
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFFEF4444).withOpacity(0.4),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 10,
+              height: 10,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              text,
+              style: const TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w800,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+    
     return ClayContainer(
       borderRadius: 20,
       concave: true,
