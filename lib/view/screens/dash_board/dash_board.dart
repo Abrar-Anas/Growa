@@ -2,12 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:growa/model/colors/colors.dart';
 import 'package:growa/model/glassbottomnav.dart';
+import 'package:get/get.dart';
+import 'package:growa/controllers/websocket_controller.dart';
+import 'package:growa/view/screens/disease/disease_listing_page.dart';
 import 'package:growa/view/screens/home_screen/home_screen.dart';
-import 'package:growa/view/screens/stats/stats_screen_two.dart';
 import 'package:growa/view/screens/user_screen/user_screen.dart';
 
 class DashBoard extends StatelessWidget {
-  DashBoard({super.key});
+  DashBoard({
+    this.onToggleMode,
+    super.key,
+  });
+
+  final WebsocketController wsController = Get.put(WebsocketController());
 
   final PageController pageController = PageController(initialPage: 1);
 
@@ -15,26 +22,56 @@ class DashBoard extends StatelessWidget {
 
   final ValueNotifier<int> activeIndex = ValueNotifier<int>(1);
 
-  final List<IconData> icons = [Icons.auto_graph, Icons.home, Icons.person];
+  final double fixedGlassWidth = 90;
 
-  final List<String> labelData = ["STATS", "HOME", "USER"];
+  final List<IconData> icons = [Icons.dangerous, Icons.home, Icons.person];
 
-  final List<Widget> screens = [StatsScreenTwo(), HomeScreen(), UserScreen()];
+  final List<String> labelData = ["DISEASE", "HOME", "USER"];
 
+  final List<Widget> screens = [DiseaseListPage(), HomeScreen(), UserScreen()];
+  final VoidCallback? onToggleMode;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
       bottomNavigationBar: _bottomNavigationBar(),
       drawer: Drawer(),
-      appBar: _appBar(),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(70),
+        child: Obx(() => ClayAppBar(
+          isAutomated: wsController.isAutomated.value,
+          wsStatus: wsController.wsStatus.value,
+          onToggleMode: () {
+            wsController.toggleMode();
+            onToggleMode?.call();
+          },
+        )),
+      ),
       backgroundColor: tint,
-      body: PageView(
-        controller: pageController,
-        onPageChanged: (index) {
-          activeIndex.value = index;
+      body: NotificationListener<ScrollNotification>(
+        onNotification: (notification) {
+          if (notification is ScrollUpdateNotification) {
+            // This is the magic part: it calculates exactly where the glass should be
+            // based on the PageView's current scroll position.
+            double barWidth =
+                MediaQuery.of(context).size.width -
+                48; // 48 is the horizontal padding (24*2)
+            double itemWidth = barWidth / icons.length;
+
+            if (pageController.hasClients) {
+              leftPosition.value = pageController.page! * itemWidth;
+              activeIndex.value = pageController.page!.round();
+            }
+          }
+          return false;
         },
-        children: screens,
+        child: PageView(
+          controller: pageController,
+          onPageChanged: (index) {
+            activeIndex.value = index;
+          },
+          children: screens,
+        ),
       ),
     );
   }
@@ -91,10 +128,12 @@ class DashBoard extends StatelessWidget {
                   ValueListenableBuilder<double>(
                     valueListenable: leftPosition,
                     builder: (context, pos, _) {
+                      double centerposition =
+                          pos + (itemWidth / 2) - (fixedGlassWidth / 2);
                       return AnimatedPositioned(
                         duration: const Duration(milliseconds: 300),
                         curve: Curves.easeOutBack,
-                        left: pos + (itemWidth * 0.1),
+                        left: centerposition,
                         top: 12.h,
                         child: ValueListenableBuilder<int>(
                           valueListenable: activeIndex,
@@ -107,7 +146,7 @@ class DashBoard extends StatelessWidget {
                               builder: (context, scale, child) {
                                 return Transform.scale(
                                   scale: scale,
-                                  child: GlassOval(width: itemWidth * 0.75),
+                                  child: GlassOval(width: fixedGlassWidth),
                                 );
                               },
                             );
@@ -173,17 +212,27 @@ class DashBoard extends StatelessWidget {
   }
 }
 
-AppBar _appBar() {
-  return AppBar(
-    backgroundColor: tint,
-    centerTitle: true,
-    title: Text(
-      "Growa",
-      style: TextStyle(
-        color: green,
-        fontWeight: FontWeight.bold,
-        fontSize: 30.sp,
-      ),
-    ),
-  );
-}
+// AppBar _appBar() {
+//   return AppBar(
+//     backgroundColor: tint,
+//     actions: [
+//       CircleAvatar(
+//         backgroundColor: Colors.green.shade500,
+//         child: Text(
+//           "A",
+//           style: TextStyle(color: white, fontWeight: FontWeight.w400),
+//         ),
+//       ),
+//     ],
+//     actionsPadding: EdgeInsets.all(12),
+//     centerTitle: true,
+//     title: Text(
+//       "Growa",
+//       style: TextStyle(
+//         color: green,
+//         fontWeight: FontWeight.bold,
+//         fontSize: 30.sp,
+//       ),
+//     ),
+//   );
+// }

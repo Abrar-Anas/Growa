@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:growa/view/screens/home_screen/websocket_testing.dart';
 import 'package:growa/view/screens/splash_screen/splash_screen.dart';
 
 void main() async {
@@ -21,6 +24,6 @@ class MyApp extends StatelessWidget {
       home: child,
       debugShowCheckedModeBanner: false,
     ),
-    child: const SplashScreen(),
+    child: SplashScreen(),
   );
 }

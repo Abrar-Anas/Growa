@@ -273,32 +273,49 @@ class GlassConditionCard extends StatelessWidget {
                 SizedBox(
                   height: 90.h,
                   child: AnimatedRadialGauge(
-                    duration: const Duration(seconds: 1),
+                    initialValue: 0,
+                    curve: Curves.decelerate,
+                    duration: const Duration(milliseconds: 1500),
                     value: value,
                     axis: GaugeAxis(
+                      progressBar: GaugeBasicProgressBar(
+                        color: Color(0x00000000),
+                      ),
+
                       min: 0,
                       max: 100,
                       degrees: 180,
                       style: const GaugeAxisStyle(
+                        blendColors: true,
                         thickness: 10,
                         background: Colors.white10,
                         segmentSpacing: 4,
                       ),
                       segments: [
                         const GaugeSegment(
+                          gradient: GaugeAxisGradient(
+                            colors: [Colors.greenAccent, Colors.yellowAccent],
+                          ),
                           from: 0,
                           to: 33,
-                          color: Colors.redAccent,
+                          color: Colors.greenAccent,
                         ),
                         const GaugeSegment(
+                          gradient: GaugeAxisGradient(
+                            colors: [Colors.yellowAccent, Colors.redAccent],
+                          ),
+
                           from: 33,
                           to: 66,
                           color: Colors.yellowAccent,
                         ),
                         const GaugeSegment(
+                          gradient: GaugeAxisGradient(
+                            colors: [Colors.redAccent, Colors.red],
+                          ),
                           from: 66,
                           to: 100,
-                          color: Colors.greenAccent,
+                          color: Colors.redAccent,
                         ),
                       ],
                       pointer: GaugePointer.needle(
