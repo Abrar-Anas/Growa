@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:growa/view/screens/dash_board/dash_board.dart';
-import 'package:growa/view/screens/home_screen/home_screen.dart';
-import 'package:growa/view/screens/splash_screen/splash_screen.dart';
+import 'package:growa/view/screens/home_screen/websocket_testing.dart';
+import 'package:growa/view/screens/testing_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +22,6 @@ class MyApp extends StatelessWidget {
       home: child,
       debugShowCheckedModeBanner: false,
     ),
-    child: SplashScreen(),
+    child: Websocket(),
   );
 }

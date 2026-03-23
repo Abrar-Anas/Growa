@@ -1,11 +1,6 @@
 import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
-
-// final channel = WebSocketChannel.connect(
-//   Uri.parse("http://51.21.132.209/api/notifications"),
-// );
 
 class ApiService {
   final Dio _dio = Dio(
@@ -97,23 +92,6 @@ class ApiService {
       throw Exception("Failed to load notification");
     }
   }
-
-  // Future<Sensor> fetchUserData() async {
-  //   try {
-  //     // Replace with your actual API endpoint
-  //     final response = await _dio.get(
-  //       'https://growa.nexariccreations.store/api/',
-  //     );
-
-  //     if (response.statusCode == 200) {
-  //       return User.fromJson(response.data);
-  //     } else {
-  //       throw Exception('Failed to load user');
-  //     }
-  //   } catch (e) {
-  //     throw Exception('Error fetching data: $e');
-  //   }
-  // }
 
   Future<User> fetchSensorData() async {
     try {

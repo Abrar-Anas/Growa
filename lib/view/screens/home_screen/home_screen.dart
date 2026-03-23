@@ -1,12 +1,16 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:growa/controllers/auth_service.dart';
 import 'package:growa/controllers/real_time_weather.dart';
+import 'package:growa/controllers/websocket.dart';
 import 'package:growa/view/screens/parameter_details.dart';
 import 'dart:math';
 import 'dart:ui';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 /// ==========================================
 /// PURE STATELESS CORE DASHBOARD
@@ -38,6 +42,12 @@ class HomeScreen extends StatelessWidget {
   final ValueChanged<bool>? onPumpToggle;
 
   final ApiService apiService = ApiService();
+
+  final WebSocketChannel channel = WebSocketChannel.connect(
+    Uri.parse(
+      "ws://51.21.132.209/app/nywcgjbzz5yhljss7pbt?protocol=7&client=js&version=8.4.0-rc2&flash=false",
+    ),
+  );
 
   HomeScreen({
     Key? key,
@@ -234,6 +244,58 @@ class HomeScreen extends StatelessWidget {
                     const SizedBox(
                       height: 140,
                     ), // Extra space for the plant image
+                    Container(
+                      child: StreamBuilder(
+                        stream: channel.stream,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          }
+                          if (!snapshot.hasData) {
+                            return CircularProgressIndicator();
+                          }
+
+                          // 3. Parse the JSON data
+                          // Handling possibility of double encoded string
+                          var decodedRaw = jsonDecode(snapshot.data);
+                          if (decodedRaw is String) {
+                            try {
+                              decodedRaw = jsonDecode(decodedRaw);
+                            } catch (_) {}
+                          }
+
+                          var humidityValue = '--';
+                          if (decodedRaw is Map<String, dynamic>) {
+                            var dataObj = decodedRaw['data'];
+                            if (dataObj is String) {
+                              try {
+                                dataObj = jsonDecode(dataObj);
+                              } catch (_) {}
+                            }
+                            if (dataObj is Map && dataObj['humidity'] != null) {
+                              humidityValue = dataObj['humidity'].toString();
+                            }
+                          }
+
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Current Humidity",
+                                style: TextStyle(fontSize: 20),
+                              ),
+                              Text(
+                                "$humidityValue%",
+                                style: TextStyle(
+                                  fontSize: 48,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
                   ],
                 ),
               ),
